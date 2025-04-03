@@ -51,7 +51,9 @@ class MongodbConnector {
     }
     getDocuments(collectionName_1, filterObject_1) {
         return __awaiter(this, arguments, void 0, function* (collectionName, filterObject, options = {}) {
-            return yield this.getDb().collection(collectionName).find(filterObject, options);
+            const instrument = yield this.getDb().collection(collectionName).find(filterObject, options).toArray();
+            console.log("INSTRUMENTS ", instrument);
+            return instrument;
         });
     }
     deleteDocument(collectionName, filterObject) {

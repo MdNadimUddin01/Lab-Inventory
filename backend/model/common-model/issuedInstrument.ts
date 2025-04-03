@@ -1,7 +1,6 @@
 export class IssuedInstrument {
   instrumentId: string;
   studentId: string;
-  quantity: number;
   dateOfIssue: Date;
   dateOfReturn: Date;
   totalCost: number;
@@ -10,7 +9,6 @@ export class IssuedInstrument {
   constructor(
     instrumentId: string,
     studentId: string,
-    quantity: number,
     dateOfIssue: Date,
     dateOfReturn: Date,
     totalCost: number,
@@ -18,7 +16,6 @@ export class IssuedInstrument {
   ) {
     this.instrumentId = instrumentId;
     this.studentId = studentId;
-    this.quantity = quantity;
     this.dateOfIssue = dateOfIssue;
     this.dateOfReturn = dateOfReturn;
     this.totalCost = totalCost;
@@ -29,7 +26,6 @@ export class IssuedInstrument {
     return new IssuedInstrument(
       "",
       "",
-      0,
       new Date(Date.now()),
       new Date(Date.now()),
       0,
@@ -43,7 +39,6 @@ export class IssuedInstrument {
     if (issuedInstrumentObject) {
         issuedInstrument.instrumentId = issuedInstrumentObject.instrumentId ?? "";
         issuedInstrument.studentId = issuedInstrumentObject.studentId ?? "";
-        issuedInstrument.quantity = issuedInstrumentObject.quantity ?? 0;
         issuedInstrument.dateOfIssue = issuedInstrumentObject.dateOfIssue ?? new Date(Date.now());
         issuedInstrument.dateOfReturn = issuedInstrumentObject.dateOfReturn ?? new Date(Date.now());
         issuedInstrument.totalCost = issuedInstrumentObject.totalCost ?? 0;

@@ -9,6 +9,5 @@ const environment_1 = require("../../environment");
 function authUSer(req, res, next) {
     const { token } = req.cookies;
     req.userInfo = jsonwebtoken_1.default.verify(token, environment_1.environment.jwtSecret);
-    // console.llog()
     next();
 }

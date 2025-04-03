@@ -1,21 +1,21 @@
 export enum categories {
-    allEquipment = "All Equipment",
-    chemistryEquipment ="Chemistry Equipment",
-    biologyEquipment = "Biology Equipment",
-    computerHardware = "Computer Hardware",
-    electronics = "Electronics",
-    physicalApparatus = "Physics Apparatus",
-    generalTools = "General Tools",
-};
+  allEquipment = "All Equipment",
+  chemistryEquipment = "Chemistry Equipment",
+  biologyEquipment = "Biology Equipment",
+  computerHardware = "Computer Hardware",
+  electronics = "Electronics",
+  physicalApparatus = "Physics Apparatus",
+  generalTools = "General Tools",
+}
 
-  export enum statuses {
-    allStatus = "All Statuses",
-    available = "Available",
-    inUse = "In Use",
-    underMaintenance = "Under Maintenance",
-    damaged = "Damaged",
-   calibrationRequired =  "Calibration Required",
-  };
+export enum statuses {
+  allStatus = "All Statuses",
+  available = "Available",
+  inUse = "In Use",
+  underMaintenance = "Under Maintenance",
+  damaged = "Damaged",
+  calibrationRequired = "Calibration Required",
+}
 
 export class Instrument {
   instrumentName: string;
@@ -71,7 +71,7 @@ export class Instrument {
       new Date(Date.now()),
       new Date(Date.now()),
       new Date(Date.now()),
-      0,
+      0
     );
   }
 
@@ -83,16 +83,20 @@ export class Instrument {
       instrument.quantity = instrumentObject.quantity ?? 0;
       instrument.costPerPeice = instrumentObject.costPerPeice ?? 0;
       instrument.companyType = instrumentObject.companyType ?? "";
-      instrument.category = instrumentObject.category ?? categories.allEquipment;
+      instrument.category =
+        instrumentObject.category ?? categories.allEquipment;
       instrument.department = instrumentObject.department ?? "";
       instrument.location = instrumentObject.location ?? "";
-      instrument.lastMaintenance = instrumentObject.lastMaintenance ?? new Date(Date.now());
-      instrument.nextMaintenance = instrumentObject.nextMaintenance ?? new Date(Date.now());
-      instrument.purchaseDate = instrumentObject.purchaseDate ?? new Date(Date.now());
+      instrument.lastMaintenance =
+        instrumentObject.lastMaintenance ?? new Date(Date.now());
+      instrument.nextMaintenance =
+        instrumentObject.nextMaintenance ?? new Date(Date.now());
+      instrument.purchaseDate =
+        instrumentObject.purchaseDate ?? new Date(Date.now());
       instrument.available = instrumentObject.available;
-      instrument.status = instrumentObject.status ?? statuses.allStatus
+      instrument.status = instrumentObject.status ?? statuses.allStatus;
     }
-    
-    return instrument
+
+    return instrument;
   }
 }

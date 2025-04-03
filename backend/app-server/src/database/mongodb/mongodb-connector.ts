@@ -25,7 +25,7 @@ export class MongodbConnector{
         await this.getDb()?.collection(colllectionName).updateOne(filterObject , {$set:document})
     }
 
-     async saveDocuments(colllectionName:string , filterObject : Filter<Document> , document:any):Promise<void>{
+    async saveDocuments(colllectionName:string , filterObject : Filter<Document> , document:any):Promise<void>{
         await this.getDb()?.collection(colllectionName).updateMany(filterObject , {$set:document});
     }
 
@@ -42,7 +42,10 @@ export class MongodbConnector{
     }
 
     async getDocuments(collectionName:string , filterObject:Filter<Document> , options:FindOptions<Document> = {}):Promise<any>{
-        return await this.getDb().collection(collectionName).find(filterObject , options);
+        const instrument = await this.getDb().collection(collectionName).find(filterObject , options).toArray();
+        console.log("INSTRUMENTS " , instrument);
+
+        return instrument
     }
 
     

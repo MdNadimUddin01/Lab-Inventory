@@ -2,7 +2,7 @@ import { Router } from "express";
 import { MongodbConnector } from "../../database/mongodb";
 import { authUSer } from "../middleware/auth";
 import { checkPermission } from "../middleware/checkPermission";
-import {ObjectId} from "mongodb"
+import { ObjectId } from "mongodb";
 
 export function instrument(router: Router, mongodbConnector: MongodbConnector) {
   router.post(
@@ -48,7 +48,7 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
       }
 
       const instrument = await mongodbConnector.getDocument("Instrument", {
-        "_id": new ObjectId(id),
+        _id: new ObjectId(id),
       });
 
       if (!instrument) {
@@ -69,10 +69,8 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
   });
 
   router.get("/get/all/instrument", async (req, res) => {
-
     try {
-      
-      const instrument = await mongodbConnector.getDocuments("Instrument" , {});
+      const instrument = await mongodbConnector.getDocuments("Instrument", {});
 
       if (!instrument) {
         return res.status(404).send({
@@ -84,7 +82,6 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
         message: "Instrument fetched",
         instrument,
       });
-
     } catch (error) {
       return res.status(500).send({
         message: error.message,
@@ -97,36 +94,42 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
     authUSer,
     checkPermission("canEditInstrument", mongodbConnector),
     async (req, res) => {
+      const instrument = req.body;
+      const id = req.params.id;
+      instrument.userId = req.userInfo.id;
 
-        const instrument = req.body;
-        const id = req.params.id;
-        instrument.userId = req.userInfo.id
+      try {
+        const existingInstrument = await mongodbConnector.getDocument(
+          "Instrument",
+          { _id: new ObjectId(id) }
+        );
 
-        try {
-
-            const existingInstrument = await mongodbConnector.getDocument("Instrument" , {"_id" : new ObjectId(id)});
-
-            if(!existingInstrument){
-                return res.status(404).send({
-                    message:"Instrument not found"
-                })
-            }
-
-            await mongodbConnector.saveDocument("Instrument" ,{"_id" : new ObjectId(id)} , instrument)
-
-            const updatedInstrument = await mongodbConnector.getDocument("Instrument" , {"_id" : new ObjectId(id)});
-        
-    
-            return res.status(200).send({
-                message:"Instrument updated",
-                updatedInstrument
-            })
-    
-        } catch (error) {
-            return res.status(500).send({
-                message : error.message
-            })
+        if (!existingInstrument) {
+          return res.status(404).send({
+            message: "Instrument not found",
+          });
         }
+
+        await mongodbConnector.saveDocument(
+          "Instrument",
+          { _id: new ObjectId(id) },
+          instrument
+        );
+
+        const updatedInstrument = await mongodbConnector.getDocument(
+          "Instrument",
+          { _id: new ObjectId(id) }
+        );
+
+        return res.status(200).send({
+          message: "Instrument updated",
+          updatedInstrument,
+        });
+      } catch (error) {
+        return res.status(500).send({
+          message: error.message,
+        });
+      }
     }
   );
 
@@ -134,8 +137,37 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
     "/delete/instrument/:id",
     authUSer,
     checkPermission("canDeleteInstrument", mongodbConnector),
-    async (req, res) => {}
+    async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const existingInstrument = await mongodbConnector.getDocument(
+          "Instrument",
+          { _id: new ObjectId(id) }
+        );
+
+        if (!existingInstrument) {
+          return res.status(404).send({
+            message: "Instrument not found",
+          });
+        }
+
+        const instrumentInfo = await mongodbConnector.deleteDocument(
+          "Instrument",
+          { _id: new ObjectId(id) }
+        );
+
+        return res.status(200).send({
+          message: "Delete Succesfully",
+        });
+      } catch (error) {
+        return res.status(500).send({
+          message: "Internal Server Error",
+        });
+      }
+    }
   );
 
-  // router.
+
+
 }

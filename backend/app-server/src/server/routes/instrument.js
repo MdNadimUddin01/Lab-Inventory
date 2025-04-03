@@ -43,7 +43,7 @@ function instrument(router, mongodbConnector) {
                 return res.status(400).send("Inventory Id is required");
             }
             const instrument = yield mongodbConnector.getDocument("Instrument", {
-                "_id": new mongodb_1.ObjectId(id),
+                _id: new mongodb_1.ObjectId(id),
             });
             if (!instrument) {
                 return res.status(404).send({
@@ -85,25 +85,43 @@ function instrument(router, mongodbConnector) {
         const id = req.params.id;
         instrument.userId = req.userInfo.id;
         try {
-            const existingInstrument = yield mongodbConnector.getDocument("Instrument", { "_id": new mongodb_1.ObjectId(id) });
+            const existingInstrument = yield mongodbConnector.getDocument("Instrument", { _id: new mongodb_1.ObjectId(id) });
             if (!existingInstrument) {
                 return res.status(404).send({
-                    message: "Instrument not found"
+                    message: "Instrument not found",
                 });
             }
-            yield mongodbConnector.saveDocument("Instrument", { "_id": new mongodb_1.ObjectId(id) }, instrument);
-            const updatedInstrument = yield mongodbConnector.getDocument("Instrument", { "_id": new mongodb_1.ObjectId(id) });
+            yield mongodbConnector.saveDocument("Instrument", { _id: new mongodb_1.ObjectId(id) }, instrument);
+            const updatedInstrument = yield mongodbConnector.getDocument("Instrument", { _id: new mongodb_1.ObjectId(id) });
             return res.status(200).send({
                 message: "Instrument updated",
-                updatedInstrument
+                updatedInstrument,
             });
         }
         catch (error) {
             return res.status(500).send({
-                message: error.message
+                message: error.message,
             });
         }
     }));
-    router.delete("/delete/instrument/:id", auth_1.authUSer, (0, checkPermission_1.checkPermission)("canDeleteInstrument", mongodbConnector), (req, res) => __awaiter(this, void 0, void 0, function* () { }));
-    // router.
+    router.delete("/delete/instrument/:id", auth_1.authUSer, (0, checkPermission_1.checkPermission)("canDeleteInstrument", mongodbConnector), (req, res) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const id = req.params.id;
+            const existingInstrument = yield mongodbConnector.getDocument("Instrument", { _id: new mongodb_1.ObjectId(id) });
+            if (!existingInstrument) {
+                return res.status(404).send({
+                    message: "Instrument not found",
+                });
+            }
+            const instrumentInfo = yield mongodbConnector.deleteDocument("Instrument", { _id: new mongodb_1.ObjectId(id) });
+            return res.status(200).send({
+                message: "Delete Succesfully",
+            });
+        }
+        catch (error) {
+            return res.status(500).send({
+                message: "Internal Server Error",
+            });
+        }
+    }));
 }
