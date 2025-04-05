@@ -36,7 +36,7 @@ const LandingPage = () => {
               </p>
               <div class="flex flex-col sm:flex-row gap-4">
                 
-                <button class="px-6 py-3 bg-white text-white font-medium rounded-lg hover:bg-blue-50 transition duration-200 flex items-center justify-center">
+                <button class="px-6 py-3 bg-white text-black font-medium rounded-lg hover:bg-blue-50 transition duration-200 flex items-center justify-center cursor-pointer">
                   Get Started <span class="ml-2">→</span>
                 </button>
                 

@@ -1,21 +1,15 @@
 import React, { useState } from "react";
 import {
   Search,
-  ChevronDown,
-  Download,
-  Edit,
   Filter,
   Microscope,
   Monitor,
   HardDrive,
   Beaker,
-  Trash2,
-  AlertCircle,
-  CheckCircle,
+  View,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
-function Product() {
+function RequestedInventory() {
   const [inventory, setInventory] = useState([
     {
       id: 1,
@@ -120,19 +114,7 @@ function Product() {
 const ProductsHeader = () => {
   return (
     <div className="container flex justify-between items-center mb-6">
-      <h1 className="text-3xl font-bold">Products</h1>
-      <div className="text-sm">
-        Add, view and edit your products all in one place.{" "}
-        <span className="text-blue-600">Need help?</span>
-      </div>
-      <div className="flex space-x-2">
-        <Link to="/admin-dashboard/addInventoryItem"
-          className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform hover:-translate-y-0.5`}
-        >
-          ADD PRODUCT
-        </Link>
-      </div>
+      <h1 className="text-3xl font-bold">Requested Inventory</h1>
     </div>
   );
 };
@@ -230,35 +212,6 @@ const SearchFilters = () => {
 };
 
 const ProductsList = ({ inventory }) => {
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Available":
-        return "bg-green-100 text-green-800";
-      case "In Use":
-        return "bg-blue-100 text-blue-800";
-      case "Under Maintenance":
-        return "bg-yellow-100 text-yellow-800";
-      case "Damaged":
-        return "bg-red-100 text-red-800";
-      case "Calibration Required":
-        return "bg-purple-100 text-purple-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  console.log(inventory);
-
-  const getAvailabilityIndicator = (item) => {
-    const percentage = (item.available / item.quantity) * 100;
-    if (percentage > 60) {
-      return <CheckCircle size={18} className="text-green-500" />;
-    } else if (percentage > 20) {
-      return <AlertCircle size={18} className="text-yellow-500" />;
-    } else {
-      return <AlertCircle size={18} className="text-red-500" />;
-    }
-  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
@@ -268,18 +221,15 @@ const ProductsList = ({ inventory }) => {
             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
               Equipment
             </th>
+
             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
               Department/Location
             </th>
-            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
-            </th>
-            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Quantity
-            </th>
+
             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
               Maintenance
             </th>
+
             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions
             </th>
@@ -288,7 +238,7 @@ const ProductsList = ({ inventory }) => {
         <tbody className="divide-y divide-gray-200">
           {inventory.map((item) => (
             <tr key={item.id} className="hover:bg-gray-50">
-              <td className="px-6  text-center py-4 whitespace-nowrap">
+              <td className="px-6 py-4 text-center whitespace-nowrap">
                 <div className="flex items-center">
                   <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
                     {item.icon}
@@ -301,27 +251,12 @@ const ProductsList = ({ inventory }) => {
                   </div>
                 </div>
               </td>
+
               <td className="px-6 py-4 text-center whitespace-nowrap">
-                <div className="text-sm text-center text-gray-900">{item.department}</div>
+                <div className="text-sm text-gray-900">{item.department}</div>
                 <div className="text-sm text-gray-500">{item.location}</div>
               </td>
-              <td className="px-6 py-4 text-center whitespace-nowrap">
-                <span
-                  className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                    item.status
-                  )}`}
-                >
-                  {item.status}
-                </span>
-              </td>
-              <td className="px-6 py-4 text-center whitespace-nowrap">
-                <div className="flex items-center">
-                  {getAvailabilityIndicator(item)}
-                  <span className="ml-2 text-sm text-gray-900">
-                    {item.available} / {item.quantity}
-                  </span>
-                </div>
-              </td>
+
               <td className="px-6 py-4 text-center whitespace-nowrap">
                 <div className="text-sm text-gray-900">
                   Last: {item.lastMaintenance}
@@ -330,16 +265,12 @@ const ProductsList = ({ inventory }) => {
                   Next: {item.nextMaintenance}
                 </div>
               </td>
-              <td className="px-6 py-4 text-center whitespace-nowrap text-sm font-medium">
-                <div className="flex justify-end space-x-3  py-2 px-3 rounded-lg shadow-sm">
-                  <button className="p-1.5 cursor-pointer rounded-md bg-blue-50 hover:bg-blue-100 transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300">
-                    <Edit size={18} className="text-gray-800" />
-                  </button>
-                  <button className="p-1.5 cursor-pointer rounded-md bg-white hover:bg-red-50 border border-red-200 transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-red-300">
-                    <Trash2
-                      size={18}
-                      className="text-red-500 hover:text-red-600"
-                    />
+
+              <td className="px-6 py-4 text-center bg-white whitespace-nowrap text-sm font-medium ">
+                <div className="flex justify-end space-x-3  py-2 px-3 rounded-lg cursor-pointer">
+                  <button className="flex gap-2 items-center justify-center p-1.5 rounded-md bg-white hover:bg-red-50 border border-red-200 transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 cursor-pointer focus:ring-red-300">
+                    <View size={24} color="#000000" />
+                    <span>View Student</span>
                   </button>
                 </div>
               </td>
@@ -351,4 +282,4 @@ const ProductsList = ({ inventory }) => {
   );
 };
 
-export default Product;
+export default RequestedInventory;
