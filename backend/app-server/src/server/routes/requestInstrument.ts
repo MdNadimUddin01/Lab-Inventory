@@ -15,7 +15,7 @@ export function requestInstrument(
     try {
 
       const requestedInstrument = await mongodbConnector.getDocument(
-        "RequestedInstrument",
+        "RequestInstrument",
         {instrumentId: new ObjectId(id) }
       );
 
@@ -37,10 +37,11 @@ export function requestInstrument(
     }
   });
 
-  router.get("get/all/requested/instrument", async (req, res) => {
+  router.get("/get/all/requested/instrument", async (req, res) => {
     try {
-      const requestedInstrument = await mongodbConnector.getDocuments(
-        "RequestedInstrument",
+    
+      const requestedInstrument = await mongodbConnector.getAllInstrument(
+        "RequestInstrument",
         {}
       );
 
@@ -54,6 +55,7 @@ export function requestInstrument(
         message: "Instrument fetched",
         requestedInstrument,
       });
+
     } catch (error) {
       return res.status(500).send({
         message: error.message,

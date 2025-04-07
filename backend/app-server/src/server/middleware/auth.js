@@ -7,7 +7,8 @@ exports.authUSer = authUSer;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const environment_1 = require("../../environment");
 function authUSer(req, res, next) {
-    const { token } = req.cookies;
+    const token = req.body.token || req.cookies;
+    console.log("TOKEN ", req.body);
     req.userInfo = jsonwebtoken_1.default.verify(token, environment_1.environment.jwtSecret);
     next();
 }

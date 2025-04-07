@@ -47,7 +47,7 @@ function user(router, mongodbConnector) {
             });
             // console.log("USER : ", user);
             res.status(200).send({
-                message: `User Signup sucessfully as ${role}`,
+                message: `Account Signup sucessfully as ${role}`,
                 user,
             });
         }
@@ -76,6 +76,7 @@ function user(router, mongodbConnector) {
                 id: user._id
             };
             const token = jsonwebtoken_1.default.sign(payload, environment_1.environment.jwtSecret, { expiresIn: "24h" });
+            console.log(token);
             return res.cookie("token", token).status(200).send({
                 message: "Login successful. Welcome back!",
                 user,

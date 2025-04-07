@@ -5,6 +5,7 @@ import { Boxes, ClipboardList, GraduationCap, Home, PackageCheck , PackagePlus  
 
 
 function Admin() {
+  const user = JSON.parse(localStorage.getItem("user")) ?? null
   const SidebarData = [
     {
       to: "/",
@@ -45,8 +46,8 @@ function Admin() {
     
   ];
   return (
-    <div>
-      <div className="min-h-screen rounded-3xl  flex">
+   <div>
+      {user && <div className="min-h-screen rounded-3xl  flex">
       {/* <div className=" overflow-hidden shadow-xl flex"> */}
         <div className='w-64 rounded-3xl '><Sidebar title="Admin Dashboard" SidebarData={SidebarData} /></div>
         
@@ -56,7 +57,7 @@ function Admin() {
           <Outlet />
         </div>
       {/* </div> */}
-    </div>
+    </div>}
 
     </div>
   )

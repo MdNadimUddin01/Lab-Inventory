@@ -1,7 +1,13 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignupForm = () => {
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -53,7 +59,7 @@ const SignupForm = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const newErrors = validateForm();
 
@@ -66,11 +72,19 @@ const SignupForm = () => {
     setIsSubmitting(true);
 
     // Simulate API call
+    try{
+      const {data} = await axios.post(backendUrl + "signup" , formData);
+
+      toast.success(data.message);
+
+    }catch(error){
+      toast.error(error.response.data)
+    }
+
     setTimeout(() => {
       console.log("Form submitted successfully:", formData);
       setIsSubmitting(false);
-      // Here you would typically make an API call to register the user
-      // and handle the response accordingly
+      
     }, 1500);
   };
 

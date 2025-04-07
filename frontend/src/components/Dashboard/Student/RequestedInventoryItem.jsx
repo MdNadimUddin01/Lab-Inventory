@@ -8,8 +8,9 @@ import {
   Beaker,
   View,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
-function RequestedInventory() {
+function RequestedInventoryItem() {
   const [inventory, setInventory] = useState([
     {
       id: 1,
@@ -212,7 +213,6 @@ const SearchFilters = () => {
 };
 
 const ProductsList = ({ inventory }) => {
-
   return (
     <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
       <table className="w-full">
@@ -268,10 +268,13 @@ const ProductsList = ({ inventory }) => {
 
               <td className="px-6 py-4 text-center bg-white whitespace-nowrap text-sm font-medium ">
                 <div className="flex justify-end space-x-3  py-2 px-3 rounded-lg cursor-pointer">
-                  <button className="flex gap-2 items-center justify-center p-1.5 rounded-md bg-white hover:bg-red-50 border border-red-200 transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 cursor-pointer focus:ring-red-300">
+                  <Link
+                    to={"student/123"}
+                    className="flex gap-2 items-center justify-center p-1.5 rounded-md bg-white hover:bg-red-50 border border-red-200 transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 cursor-pointer focus:ring-red-300"
+                  >
                     <View size={24} color="#000000" />
                     <span>View Student</span>
-                  </button>
+                  </Link>
                 </div>
               </td>
             </tr>
@@ -282,4 +285,4 @@ const ProductsList = ({ inventory }) => {
   );
 };
 
-export default RequestedInventory;
+export default RequestedInventoryItem;

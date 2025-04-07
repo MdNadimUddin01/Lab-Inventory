@@ -43,12 +43,8 @@ export class MongodbConnector{
 
     async getDocuments(collectionName:string , filterObject:Filter<Document> , options:FindOptions<Document> = {}):Promise<any>{
         const instrument = await this.getDb().collection(collectionName).find(filterObject , options).toArray();
-        console.log("INSTRUMENTS " , instrument);
-
         return instrument
     }
-
-    
 
     async deleteDocument(collectionName :string , filterObject:Filter<Document>):Promise<any>{
 
@@ -60,6 +56,36 @@ export class MongodbConnector{
     async deleteDocuments(collectionName:string , filterObject:Filter<Document>):Promise<any>{
         const result = await this.getDb()?.collection(collectionName).deleteMany(filterObject);
         return result.acknowledged;
+    }
+
+    async getAllInstrument(collectionName:string , filterObject:Filter<Document>):Promise<any>{
+        
+        const instruments = await this.getDb().collection(collectionName).aggregate([
+            {
+                $lookup:{
+                    from : "Instrument",
+                    localField :"instrumentId",
+                    foreignField: '_id',
+                    as: 'instrumentDetails'
+                }
+            },
+            {
+                $unwind: '$instrumentDetails'
+            },
+            {
+                $lookup: {
+                    from: 'User',
+                    localField: 'studentId',
+                    foreignField: '_id',
+                    as: 'studentDetails'
+                }
+            },
+            {
+                $unwind : "$studentDetails"
+            }
+        ]).toArray();
+
+        return instruments;
     }
 
 }

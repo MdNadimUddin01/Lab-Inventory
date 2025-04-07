@@ -82,6 +82,7 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
         message: "Instrument fetched",
         instrument,
       });
+
     } catch (error) {
       return res.status(500).send({
         message: error.message,
@@ -139,6 +140,7 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
     checkPermission("canDeleteInstrument", mongodbConnector),
     async (req, res) => {
       try {
+        
         const id = req.params.id;
 
         const existingInstrument = await mongodbConnector.getDocument(
@@ -158,7 +160,7 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
         );
 
         return res.status(200).send({
-          message: "Delete Succesfully",
+          message: `${existingInstrument.instrumentName} is Succesfully deleted`,
         });
       } catch (error) {
         return res.status(500).send({

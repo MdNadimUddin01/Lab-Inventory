@@ -52,7 +52,6 @@ class MongodbConnector {
     getDocuments(collectionName_1, filterObject_1) {
         return __awaiter(this, arguments, void 0, function* (collectionName, filterObject, options = {}) {
             const instrument = yield this.getDb().collection(collectionName).find(filterObject, options).toArray();
-            console.log("INSTRUMENTS ", instrument);
             return instrument;
         });
     }
@@ -67,6 +66,35 @@ class MongodbConnector {
             var _a;
             const result = yield ((_a = this.getDb()) === null || _a === void 0 ? void 0 : _a.collection(collectionName).deleteMany(filterObject));
             return result.acknowledged;
+        });
+    }
+    getAllInstrument(collectionName, filterObject) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const instruments = yield this.getDb().collection(collectionName).aggregate([
+                {
+                    $lookup: {
+                        from: "Instrument",
+                        localField: "instrumentId",
+                        foreignField: '_id',
+                        as: 'instrumentDetails'
+                    }
+                },
+                {
+                    $unwind: '$instrumentDetails'
+                },
+                {
+                    $lookup: {
+                        from: 'User',
+                        localField: 'studentId',
+                        foreignField: '_id',
+                        as: 'studentDetails'
+                    }
+                },
+                {
+                    $unwind: "$studentDetails"
+                }
+            ]).toArray();
+            return instruments;
         });
     }
 }

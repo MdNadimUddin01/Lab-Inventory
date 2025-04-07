@@ -13,10 +13,12 @@ exports.issuedInstrument = issuedInstrument;
 const mongodb_1 = require("mongodb");
 const auth_1 = require("../middleware/auth");
 function issuedInstrument(router, mongodbConnector) {
-    router.get("/issue/instrument/:id", auth_1.authUSer, (req, res) => __awaiter(this, void 0, void 0, function* () {
+    router.post("/issue/instrument/:id", auth_1.authUSer, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        var _a;
         const id = req.params.id;
         const userId = req.userInfo.id;
         const { dateOfReturn, costPaid } = req.body;
+        console.log(dateOfReturn);
         try {
             const existingInstrument = yield mongodbConnector.getDocument("Instrument", { _id: new mongodb_1.ObjectId(id) });
             if (!existingInstrument) {
@@ -39,8 +41,8 @@ function issuedInstrument(router, mongodbConnector) {
                     studentId: new mongodb_1.ObjectId(userId),
                     dateOfIssue: Date.now(),
                     dateOfReturn: dateOfReturn,
-                    totalCost: existingInstrument.costPerPeice,
-                    costPaid: costPaid,
+                    totalCost: (_a = existingInstrument.costPerPeice) !== null && _a !== void 0 ? _a : 0,
+                    costPaid: costPaid !== null && costPaid !== void 0 ? costPaid : 0,
                 };
                 const issuedInstrument = yield mongodbConnector.createDcoument("IssuedInstrument", issueInstrumentInfo);
                 if (!issuedInstrument) {
@@ -49,17 +51,20 @@ function issuedInstrument(router, mongodbConnector) {
                     });
                 }
                 existingInstrument.available--;
+                if (existingInstrument.available == 0) {
+                    existingInstrument.status = "In Use";
+                }
                 const data = yield mongodbConnector.saveDocument("Instrument", { _id: existingInstrument._id }, existingInstrument);
                 return res.status(200).send({
                     message: "Purchase Successfull",
                 });
             }
             else {
-                console.log("REQUEST HERE");
                 const alreadyRequest = yield mongodbConnector.getDocument("RequestInstrument", {
                     instrumentId: new mongodb_1.ObjectId(id),
                     studentId: new mongodb_1.ObjectId(userId),
                 });
+                console.log("alreadyRequest : ", alreadyRequest);
                 if (alreadyRequest) {
                     return res.status(409).send({
                         message: "You have already Request this instrument",
@@ -68,10 +73,10 @@ function issuedInstrument(router, mongodbConnector) {
                 const requestInstrumentInfo = {
                     instrumentId: new mongodb_1.ObjectId(id),
                     studentId: new mongodb_1.ObjectId(userId),
-                    dateOfReques: Date.now(),
+                    dateOfRequest: Date.now(),
                     dateOfReturn: dateOfReturn,
                 };
-                const requestInstrument = yield mongodbConnector.createDcoument("requestInstrument", requestInstrumentInfo);
+                const requestInstrument = yield mongodbConnector.createDcoument("RequestInstrument", requestInstrumentInfo);
                 if (!requestInstrument) {
                     return res.status(400).send({
                         message: "Request Failed",
@@ -145,7 +150,10 @@ function issuedInstrument(router, mongodbConnector) {
     }));
     router.get("/get/all/issued/instrument", (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
-            const issuedInstrument = yield mongodbConnector.getDocuments("IssuedInstrument", {});
+            const issuedInstrument = yield mongodbConnector.getAllInstrument("IssuedInstrument", {});
+            console.log(issuedInstrument);
+            // console.log("HELLO");
+            // console.log(issuedInstrument.populate("studentId"));
             if (!issuedInstrument) {
                 return res.status(404).send({
                     message: "Instrument not found",

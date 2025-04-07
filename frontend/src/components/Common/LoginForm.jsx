@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"
+import toast from "react-hot-toast"
 
 const LoginForm = () => {
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -28,7 +34,6 @@ const LoginForm = () => {
       newErrors.email = "Email address is invalid";
     }
 
-    // Password validation
     if (!formData.password) {
       newErrors.password = "Password is required";
     }
@@ -36,7 +41,7 @@ const LoginForm = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const newErrors = validateForm();
 
@@ -48,12 +53,25 @@ const LoginForm = () => {
     setErrors({});
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Login submitted successfully:", formData);
-      setIsSubmitting(false);
+    try {
+      // Simulate API call
+      const response = await axios.post(backendUrl + "login" , formData , {withCredentials:true});    
+      console.log(response)
+      const data = response.data
+      const message = data.message;
+      const user = data.user
       
-    }, 1500);
+      localStorage.setItem("user" , JSON.stringify(user));
+      toast.success(message);
+      navigate("/");
+      
+
+    } catch (error) {
+      toast.error("Invalid Credentials");
+      setIsSubmitting(false)
+    }
+    
+    
   };
 
   return (

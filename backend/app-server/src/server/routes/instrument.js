@@ -115,7 +115,7 @@ function instrument(router, mongodbConnector) {
             }
             const instrumentInfo = yield mongodbConnector.deleteDocument("Instrument", { _id: new mongodb_1.ObjectId(id) });
             return res.status(200).send({
-                message: "Delete Succesfully",
+                message: `${existingInstrument.instrumentName} is Succesfully deleted`,
             });
         }
         catch (error) {

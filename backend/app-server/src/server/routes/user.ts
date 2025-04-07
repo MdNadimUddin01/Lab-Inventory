@@ -49,9 +49,10 @@ export function user(router: Router, mongodbConnector: MongodbConnector) {
       // console.log("USER : ", user);
 
       res.status(200).send({
-        message: `User Signup sucessfully as ${role}`,
+        message: `Account Signup sucessfully as ${role}`,
         user,
       });
+      
     } catch (error) {
       return res.status(500).send({
         message: "User Creation Failed",
@@ -84,6 +85,7 @@ export function user(router: Router, mongodbConnector: MongodbConnector) {
         }
   
         const token = jwt.sign(payload ,environment.jwtSecret , {expiresIn : "24h"})
+        console.log(token);
 
       return res.cookie("token" , token).status(200).send({
         message: "Login successful. Welcome back!",
@@ -93,5 +95,6 @@ export function user(router: Router, mongodbConnector: MongodbConnector) {
     } catch (error) {
       return res.status(501).send("Internal serval error");
     }
+    
   });
 }

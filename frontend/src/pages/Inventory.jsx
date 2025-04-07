@@ -1,104 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Package, Search, Filter, CheckCircle, AlertCircle, Settings, Calendar } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
+import axios from "axios"
 const Inventory = () => {
+  
   // Sample inventory data
-  const inventoryItems = [
-    {
-      id: 1,
-      name: "Compound Microscope",
-      itemId: "BIO-MICRO-001",
-      category: "Biology Equipment",
-      department: "Life Sciences",
-      location: "Bio Lab 102",
-      status: "Available",
-      lastMaintenance: "10 Feb 2025",
-      nextMaintenance: "10 Aug 2025",
-      purchaseDate: "15 Mar 2023",
-      quantity: 12,
-      available: 8,
-    },
-    {
-      id: 2,
-      name: "Digital Oscilloscope",
-      itemId: "PHYS-OSC-002",
-      category: "Physics Equipment",
-      department: "Physical Sciences",
-      location: "Physics Lab 201",
-      status: "In Use",
-      lastMaintenance: "05 Jan 2025",
-      nextMaintenance: "05 Jul 2025",
-      purchaseDate: "20 Sep 2023",
-      quantity: 8,
-      available: 3,
-    },
-    {
-      id: 3,
-      name: "Mass Spectrometer",
-      itemId: "CHEM-SPEC-003",
-      category: "Chemistry Equipment",
-      department: "Chemical Sciences",
-      location: "Chem Lab 305",
-      status: "Maintenance",
-      lastMaintenance: "15 Mar 2025",
-      nextMaintenance: "15 Sep 2025",
-      purchaseDate: "10 Apr 2023",
-      quantity: 4,
-      available: 0,
-    },
-    {
-      id: 4,
-      name: "3D Printer",
-      itemId: "ENG-3DP-004",
-      category: "Engineering Equipment",
-      department: "Engineering",
-      location: "Eng Workshop 405",
-      status: "Available",
-      lastMaintenance: "20 Dec 2024",
-      nextMaintenance: "20 Jun 2025",
-      purchaseDate: "05 May 2023",
-      quantity: 6,
-      available: 4,
-    },
-    {
-      id: 5,
-      name: "DNA Sequencer",
-      itemId: "BIO-SEQ-005",
-      category: "Biology Equipment",
-      department: "Life Sciences",
-      location: "Bio Lab 104",
-      status: "Available",
-      lastMaintenance: "25 Feb 2025",
-      nextMaintenance: "25 Aug 2025",
-      purchaseDate: "12 Jun 2023",
-      quantity: 2,
-      available: 1,
-    },
-    {
-      id: 6,
-      name: "Gas Chromatograph",
-      itemId: "CHEM-GC-006",
-      category: "Chemistry Equipment",
-      department: "Chemical Sciences",
-      location: "Chem Lab 302",
-      status: "In Use",
-      lastMaintenance: "15 Jan 2025",
-      nextMaintenance: "15 Jul 2025",
-      purchaseDate: "08 Aug 2023",
-      quantity: 3,
-      available: 0,
-    }
-  ];
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [inventoryItems , setInventoryItems] = useState([]);
 
+  async function getData(){
+    try {
+      const {data} = await axios.get(backendUrl + "get/all/instrument");
+      setInventoryItems(data.instrument);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getData();
+  },[]);
   // State for search functionality
   const [searchTerm, setSearchTerm] = useState('');
   
   // Filter items based on search term
   const filteredItems = inventoryItems.filter(item => 
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.itemId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.instrumentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.department.toLowerCase().includes(searchTerm.toLowerCase())
+    item.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.location.toLowerCase().includes(searchTerm.toLowerCase())
+    
   );
 
   // Function to determine status color
@@ -138,7 +68,7 @@ const Inventory = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header and search */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6">Inventory Management</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">Inventory Items</h1>
           
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-grow">
@@ -171,8 +101,8 @@ const Inventory = () => {
               <div className="p-4 border-b border-gray-100">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h2 className="font-semibold text-gray-800 text-lg">{item.name}</h2>
-                    <p className="text-sm text-gray-500 mt-1">{item.itemId}</p>
+                    <h2 className="font-semibold text-gray-800 text-lg">{item.instrumentName}</h2>
+                    {/* <p className="text-sm text-gray-500 mt-1">{item.itemId }</p> */}
                   </div>
                   <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center space-x-1 ${getStatusColor(item.status)}`}>
                     {getStatusIcon(item.status)}
@@ -204,7 +134,7 @@ const Inventory = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className="bg-blue-600 h-2 rounded-full" 
+                        className="bg-green-600 h-2 rounded-full" 
                         style={{ width: `${(item.available / item.quantity) * 100}%` }} 
                       />
                     </div>
@@ -215,7 +145,7 @@ const Inventory = () => {
                       <Calendar className="h-4 w-4 text-gray-400 mr-1" />
                       <span className="text-gray-500">Next Maintenance:</span>
                     </div>
-                    <span className="text-gray-800 font-medium">{item.nextMaintenance}</span>
+                    <span className="text-gray-800 font-medium">{item.nextMaintenance.substring(0,10)}</span>
                   </div>
                 </div>
               </div>
@@ -223,12 +153,9 @@ const Inventory = () => {
               {/* Card footer */}
               <div className="p-4 bg-gray-50 border-t border-gray-100">
                 <div className="flex justify-between">
-                  <button className="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors">
-                    Quick View
-                  </button>
-                  <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                  <Link to={item._id} className="px-3 py-1.5 w-full text-center text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
                     View Details
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -17,7 +17,7 @@ function requestInstrument(router, mongodbConnector) {
         const userId = req.userinfo.id;
         const { id } = req.params;
         try {
-            const requestedInstrument = yield mongodbConnector.getDocument("RequestedInstrument", { instrumentId: new mongodb_1.ObjectId(id) });
+            const requestedInstrument = yield mongodbConnector.getDocument("RequestInstrument", { instrumentId: new mongodb_1.ObjectId(id) });
             if (!requestedInstrument) {
                 return res.status(404).send({
                     message: "You haven't requested this instrument",
@@ -34,9 +34,9 @@ function requestInstrument(router, mongodbConnector) {
             });
         }
     }));
-    router.get("get/all/requested/instrument", (req, res) => __awaiter(this, void 0, void 0, function* () {
+    router.get("/get/all/requested/instrument", (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
-            const requestedInstrument = yield mongodbConnector.getDocuments("RequestedInstrument", {});
+            const requestedInstrument = yield mongodbConnector.getAllInstrument("RequestInstrument", {});
             if (!requestedInstrument) {
                 return res.status(404).send({
                     message: "Instrument not found",
