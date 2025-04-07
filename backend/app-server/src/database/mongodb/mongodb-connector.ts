@@ -61,6 +61,7 @@ export class MongodbConnector{
     async getAllInstrument(collectionName:string , filterObject:Filter<Document>):Promise<any>{
         
         const instruments = await this.getDb().collection(collectionName).aggregate([
+            { $match: filterObject }, 
             {
                 $lookup:{
                     from : "Instrument",

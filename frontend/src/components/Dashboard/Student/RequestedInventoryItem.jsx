@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Search,
   Filter,
@@ -7,107 +7,87 @@ import {
   HardDrive,
   Beaker,
   View,
+  Package,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-function RequestedInventoryItem() {
-  const [inventory, setInventory] = useState([
-    {
-      id: 1,
-      name: "Compound Microscope",
-      itemId: "BIO-MICRO-001",
-      category: "Biology Equipment",
-      department: "Life Sciences",
-      location: "Bio Lab 102",
-      status: "Available",
-      lastMaintenance: "10 Feb 2025",
-      nextMaintenance: "10 Aug 2025",
-      purchaseDate: "15 Mar 2023",
-      quantity: 12,
-      available: 8,
-      icon: <Microscope size={20} />,
-    },
-    {
-      id: 2,
-      name: "Dell XPS 15 Laptop",
-      itemId: "IT-COMP-054",
-      category: "Computer Hardware",
-      department: "Computer Science",
-      location: "CS Lab 201",
-      status: "In Use",
-      lastMaintenance: "20 Jan 2025",
-      nextMaintenance: "20 Jul 2025",
-      purchaseDate: "05 Jun 2024",
-      quantity: 25,
-      available: 3,
-      icon: <Monitor size={20} />,
-    },
-    {
-      id: 3,
-      name: "Digital Multimeter",
-      itemId: "PHYS-ELEC-028",
-      category: "Physics Apparatus",
-      department: "Physics",
-      location: "Physics Lab 305",
-      status: "Under Maintenance",
-      lastMaintenance: "28 Feb 2025",
-      nextMaintenance: "28 Aug 2025",
-      purchaseDate: "12 Sep 2023",
-      quantity: 15,
-      available: 10,
-      icon: <HardDrive size={20} />,
-    },
-    {
-      id: 4,
-      name: "Bunsen Burner",
-      itemId: "CHEM-EQUIP-112",
-      category: "Chemistry Equipment",
-      department: "Chemistry",
-      location: "Chem Lab 103",
-      status: "Available",
-      lastMaintenance: "15 Dec 2024",
-      nextMaintenance: "15 Jun 2025",
-      purchaseDate: "22 Jul 2022",
-      quantity: 30,
-      available: 25,
-      icon: <Beaker size={20} />,
-    },
-    {
-      id: 5,
-      name: "Oscilloscope",
-      itemId: "PHYS-ELEC-046",
-      category: "Physics Apparatus",
-      department: "Electrical Engineering",
-      location: "EE Lab 204",
-      status: "Calibration Required",
-      lastMaintenance: "05 Jan 2025",
-      nextMaintenance: "05 Jul 2025",
-      purchaseDate: "18 Apr 2024",
-      quantity: 10,
-      available: 7,
-      icon: <HardDrive size={20} />,
-    },
-    {
-      id: 6,
-      name: "Centrifuge Machine",
-      itemId: "BIO-CENT-008",
-      category: "Biology Equipment",
-      department: "Biotechnology",
-      location: "Biotech Lab 301",
-      status: "Available",
-      lastMaintenance: "22 Feb 2025",
-      nextMaintenance: "22 Aug 2025",
-      purchaseDate: "10 Nov 2023",
-      quantity: 5,
-      available: 3,
-      icon: <Microscope size={20} />,
-    },
-  ]);
+function RequestedInventory() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [inventory, setInventory] = useState([]);
+
+  function getCookie(name) {
+    const match = document.cookie.match(
+      new RegExp("(^| )" + name + "=([^;]+)")
+    );
+    return match ? match[2] : null;
+  }
+
+  async function getData() {
+    const token = getCookie("token");
+    // console.log(token);
+    try {
+      const { data } = await axios.post(
+        backendUrl + "get/all/requested/instrument/fromLab",
+        {
+          token,
+        }
+      );
+
+      console.log(data);
+      const instruments = data.requestedInstrument;
+      const groupedData = {};
+      // const instruments = data.issuedInstrument;
+      let issuedInventory = [];
+
+      for (const entry of instruments) {
+        issuedInventory.push({
+          ...entry.instrumentDetails,
+          dateOfIssue: entry.dateOfIssue,
+          dateOfReturn: entry.dateOfReturn,
+        });
+      }
+
+      console.log(issuedInventory)
+
+      // localStorage.setItem("issuedInventory", JSON.stringify(groupedData));
+      setInventory(issuedInventory);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All Equipment");
+  const [selectedStatus, setSelectedStatus] = useState("All Statuses");
+
+  const filteredItems =
+    inventory.length > 0
+      ? inventory.filter(
+          (item) =>
+            item.instrumentName
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            item.department.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : [];
+
   return (
     <div className="text-black p-10">
       <ProductsHeader />
-      <SearchFilters />
-      <ProductsList inventory={inventory} />
+      <SearchFilters
+        searchQuery={searchQuery}
+        selectedCategory={selectedCategory}
+        selectedStatus={selectedStatus}
+        setSearchQuery={setSearchQuery}
+        setSelectedCategory={setSelectedCategory}
+        setSelectedStatus={setSelectedStatus}
+      />
+      <ProductsList inventory={filteredItems} />
     </div>
   );
 }
@@ -120,7 +100,14 @@ const ProductsHeader = () => {
   );
 };
 
-const SearchFilters = () => {
+const SearchFilters = ({
+  searchQuery,
+  setSearchQuery,
+  selectedCategory,
+  setSelectedCategory,
+  selectedStatus,
+  setSelectedStatus,
+}) => {
   const categories = [
     "All Equipment",
     "Chemistry Equipment",
@@ -139,10 +126,6 @@ const SearchFilters = () => {
     "Damaged",
     "Calibration Required",
   ];
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All Equipment");
-  const [selectedStatus, setSelectedStatus] = useState("All Statuses");
 
   return (
     <div className="bg-gray-50 p-5 rounded-xl mb-6">
@@ -166,7 +149,7 @@ const SearchFilters = () => {
           </div>
         </div>
 
-        <div className="w-full md:w-64">
+        {/* <div className="w-full md:w-64">
           <label className="text-sm font-medium mb-1 block">Category</label>
           <div className="relative">
             <select
@@ -206,13 +189,30 @@ const SearchFilters = () => {
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
 const ProductsList = ({ inventory }) => {
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Available":
+        return "bg-green-100 text-green-800";
+      case "In Use":
+        return "bg-blue-100 text-blue-800";
+      case "Under Maintenance":
+        return "bg-yellow-100 text-yellow-800";
+      case "Damaged":
+        return "bg-red-100 text-red-800";
+      case "Calibration Required":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
   return (
     <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
       <table className="w-full">
@@ -227,27 +227,32 @@ const ProductsList = ({ inventory }) => {
             </th>
 
             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Maintenance
+              Issue Date
             </th>
 
             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
+              Return Date
+            </th>
+
+            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Status
             </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
           {inventory.map((item) => (
-            <tr key={item.id} className="hover:bg-gray-50">
+            <tr key={item._id} className="hover:bg-gray-50">
               <td className="px-6 py-4 text-center whitespace-nowrap">
                 <div className="flex items-center">
                   <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
-                    {item.icon}
+                    {(
+                      item.instrumentName[0] + item.instrumentName[1]
+                    ).toUpperCase()}
                   </div>
                   <div className="ml-4">
                     <div className="text-sm font-medium text-gray-900">
-                      {item.name}
+                      {item.instrumentName}
                     </div>
-                    <div className="text-sm text-gray-500">{item.itemId}</div>
                   </div>
                 </div>
               </td>
@@ -259,30 +264,43 @@ const ProductsList = ({ inventory }) => {
 
               <td className="px-6 py-4 text-center whitespace-nowrap">
                 <div className="text-sm text-gray-900">
-                  Last: {item.lastMaintenance}
+                  {new Date(item.dateOfRequest ?? Date.now()).toISOString().substring(0,10)}
                 </div>
-                <div className="text-sm text-gray-500">
-                  Next: {item.nextMaintenance}
-                </div>
+              </td>
+
+              <td className="px-6 py-4 text-center whitespace-nowrap">
+                <div className="text-sm text-gray-900">{item.dateOfReturn}</div>
               </td>
 
               <td className="px-6 py-4 text-center bg-white whitespace-nowrap text-sm font-medium ">
                 <div className="flex justify-end space-x-3  py-2 px-3 rounded-lg cursor-pointer">
-                  <Link
-                    to={"student/123"}
-                    className="flex gap-2 items-center justify-center p-1.5 rounded-md bg-white hover:bg-red-50 border border-red-200 transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 cursor-pointer focus:ring-red-300"
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                      "Requested"
+                    )}`}
                   >
-                    <View size={24} color="#000000" />
-                    <span>View Student</span>
-                  </Link>
+                    Requested
+                  </span>
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {inventory.length === 0 && (
+        <div className="text-center py-12 bg-white rounded-lg shadow mt-6">
+          <Package className="mx-auto h-12 w-12 text-gray-400" />
+          <h3 className="mt-2 text-lg font-medium text-gray-900">
+            No items found
+          </h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Try adjusting your search or filter to find what you're looking for.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
 
-export default RequestedInventoryItem;
+export default RequestedInventory;

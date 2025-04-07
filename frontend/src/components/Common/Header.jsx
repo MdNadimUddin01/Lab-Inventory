@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {FaChevronDown, FaSignOutAlt, FaUser} from "react-icons/fa"
+import { FaChevronDown, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { GiAstrolabe } from "react-icons/gi";
-
 
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -145,7 +144,6 @@ const LabFlaskIcon = ({
 };
 
 const Header = () => {
-  
   const user = JSON.parse(localStorage.getItem("user")) ?? null;
   console.log(user);
 
@@ -232,7 +230,11 @@ const Header = () => {
               <div className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
                 <Link
                   onClick={() => setIsDropdownOpen(false)}
-                  to={user.role === "Admin" ? "admin-dashboard" : "student-dashboard"}
+                  to={
+                    user.role === "Admin"
+                      ? "admin-dashboard"
+                      : "student-dashboard"
+                  }
                   className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   <FaUser className="h-4 w-4 mr-2" />
@@ -240,10 +242,14 @@ const Header = () => {
                 </Link>
                 <hr className="my-1 border-gray-200" />
                 <button
-                  onClick={() => {localStorage.removeItem("user") ;navigate("/")}}
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    localStorage.removeItem("user");
+                    navigate("/");
+                  }}
                   className="flex w-full cursor-pointer items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                 >
-                  <FaSignOutAlt  className="h-4 w-4 mr-2" />
+                  <FaSignOutAlt className="h-4 w-4 mr-2" />
                   Logout
                 </button>
               </div>

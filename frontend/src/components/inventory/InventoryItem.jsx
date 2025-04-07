@@ -87,6 +87,7 @@ const InventoryItem = () => {
       console.log(data);
       getData();
       setShowCheckoutModal(false);
+      navigate("/student-dashboard")
 
     } catch (error) {
       toast.remove(toastId)

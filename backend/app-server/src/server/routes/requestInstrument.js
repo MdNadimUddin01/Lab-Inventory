@@ -53,4 +53,19 @@ function requestInstrument(router, mongodbConnector) {
             });
         }
     }));
+    router.post("/get/all/requested/instrument/fromLab", auth_1.authUSer, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const userId = req.userInfo.id;
+            const instruments = yield mongodbConnector.getAllInstrument("RequestInstrument", { studentId: new mongodb_1.ObjectId(userId) });
+            res.status(200).send({
+                message: "Instrument fetched",
+                requestedInstrument: instruments,
+            });
+        }
+        catch (error) {
+            res.status(500).send({
+                message: error.message
+            });
+        }
+    }));
 }

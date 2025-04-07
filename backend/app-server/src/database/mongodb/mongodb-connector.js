@@ -71,6 +71,7 @@ class MongodbConnector {
     getAllInstrument(collectionName, filterObject) {
         return __awaiter(this, void 0, void 0, function* () {
             const instruments = yield this.getDb().collection(collectionName).aggregate([
+                { $match: filterObject },
                 {
                     $lookup: {
                         from: "Instrument",

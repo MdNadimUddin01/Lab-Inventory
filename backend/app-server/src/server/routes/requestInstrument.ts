@@ -63,4 +63,23 @@ export function requestInstrument(
     }
   });
 
+  router.post("/get/all/requested/instrument/fromLab" , authUSer , async(req , res) =>{
+
+    try {
+      const userId = req.userInfo.id;
+  
+      const instruments = await mongodbConnector.getAllInstrument("RequestInstrument" , {studentId : new ObjectId(userId)}); 
+
+      res.status(200).send({
+        message:"Instrument fetched",
+        requestedInstrument:instruments,
+      })
+
+    } catch (error) {
+      res.status(500).send({
+        message:error.message
+      })
+    }
+
+  })
 }

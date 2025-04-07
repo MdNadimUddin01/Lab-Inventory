@@ -39,7 +39,7 @@ function issuedInstrument(router, mongodbConnector) {
                 const issueInstrumentInfo = {
                     instrumentId: new mongodb_1.ObjectId(id),
                     studentId: new mongodb_1.ObjectId(userId),
-                    dateOfIssue: Date.now(),
+                    dateOfIssue: new Date(Date.now()),
                     dateOfReturn: dateOfReturn,
                     totalCost: (_a = existingInstrument.costPerPeice) !== null && _a !== void 0 ? _a : 0,
                     costPaid: costPaid !== null && costPaid !== void 0 ? costPaid : 0,
@@ -73,7 +73,7 @@ function issuedInstrument(router, mongodbConnector) {
                 const requestInstrumentInfo = {
                     instrumentId: new mongodb_1.ObjectId(id),
                     studentId: new mongodb_1.ObjectId(userId),
-                    dateOfRequest: Date.now(),
+                    dateOfRequest: new Date(Date.now()),
                     dateOfReturn: dateOfReturn,
                 };
                 const requestInstrument = yield mongodbConnector.createDcoument("RequestInstrument", requestInstrumentInfo);
@@ -167,6 +167,21 @@ function issuedInstrument(router, mongodbConnector) {
         catch (error) {
             return res.status(500).send({
                 message: error.message,
+            });
+        }
+    }));
+    router.get("/get/all/issued/instrument/fromLab", auth_1.authUSer, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const userId = req.userInfo.id;
+            const instruments = yield mongodbConnector.getAllInstrument("IssuedInstrument", { studentId: new mongodb_1.ObjectId(userId) });
+            res.status(200).send({
+                message: "Instrument fetched",
+                issuedInstrument: instruments,
+            });
+        }
+        catch (error) {
+            res.status(500).send({
+                message: error.message
             });
         }
     }));

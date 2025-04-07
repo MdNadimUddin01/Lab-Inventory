@@ -45,7 +45,7 @@ export function issuedInstrument(
         const issueInstrumentInfo = {
           instrumentId: new ObjectId(id),
           studentId: new ObjectId(userId),
-          dateOfIssue: Date.now(),
+          dateOfIssue: new Date(Date.now()),
           dateOfReturn: dateOfReturn,
           totalCost: existingInstrument.costPerPeice ?? 0,
           costPaid: costPaid ?? 0,
@@ -99,7 +99,7 @@ export function issuedInstrument(
         const requestInstrumentInfo = {
           instrumentId: new ObjectId(id),
           studentId: new ObjectId(userId),
-          dateOfRequest: Date.now(),
+          dateOfRequest: new Date(Date.now()),
           dateOfReturn: dateOfReturn,
         };
 
@@ -119,6 +119,7 @@ export function issuedInstrument(
         });
         
       }
+      
     } catch (error) {
       return res.status(500).send({
         message: "Internal Server Error",
@@ -237,5 +238,25 @@ export function issuedInstrument(
       });
     }
   });
+
+  router.get("/get/all/issued/instrument/fromLab" , authUSer , async(req , res) =>{
+
+    try {
+      const userId = req.userInfo.id;
+  
+      const instruments = await mongodbConnector.getAllInstrument("IssuedInstrument" , {studentId : new ObjectId(userId)}); 
+
+      res.status(200).send({
+        message:"Instrument fetched",
+        issuedInstrument:instruments,
+      })
+
+    } catch (error) {
+      res.status(500).send({
+        message:error.message
+      })
+    }
+
+  })
 
 }
