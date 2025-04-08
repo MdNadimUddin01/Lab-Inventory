@@ -37,12 +37,6 @@ function Admin() {
       label: "Issued Inventory",
       active: "/admin-dashboard/issuedInventory",
     },
-    {
-      to: "student",
-      icon: <GraduationCap size={24} />,
-      label: "Student",
-      active: "/admin-dashboard/student",
-    },
     
   ];
   return (

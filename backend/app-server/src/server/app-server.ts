@@ -12,7 +12,7 @@ export const init = async() => {
 
     app.use(express.json());
     app.use(cookieParser())
-    app.use(cors({origin:"http://localhost:5173" , credentials:true}));
+    app.use(cors({origin:"https://quantumrack.vercel.app" , credentials:true}));
     app.use("/api" , router)
 
     app.post("/signup" , async(req,res) => {
