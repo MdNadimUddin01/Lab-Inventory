@@ -779,337 +779,6 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Stats Section */}
-        <div className="container mx-auto px-6 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <div className="text-4xl font-bold text-blue-600">97%</div>
-              <p className="text-gray-500 mt-2">
-                Reduction in equipment downtime
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <div className="text-4xl font-bold text-blue-600">45%</div>
-              <p className="text-gray-500 mt-2">
-                Time saved on inventory management
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <div className="text-4xl font-bold text-blue-600">200+</div>
-              <p className="text-gray-500 mt-2">
-                Research institutions trust our solution
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Features Section */}
-        <div className="container mx-auto px-6 py-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">
-              Powerful Features for Modern Labs
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Our lab inventory system combines intuitive design with powerful
-              functionality to meet the needs of any research facility.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-200">
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-                <Beaker size={24} className="text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Equipment Tracking</h3>
-              <p className="text-gray-600">
-                Keep track of all lab equipment with detailed specifications,
-                maintenance history, and availability status.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-200">
-              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
-                <ClipboardList size={24} className="text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">
-                Maintenance Scheduling
-              </h3>
-              <p className="text-gray-600">
-                Automated maintenance reminders ensure equipment is always in
-                optimal condition and compliant with regulations.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-200">
-              <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mb-4">
-                <Bell size={24} className="text-yellow-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Smart Alerts</h3>
-              <p className="text-gray-600">
-                Receive notifications for low stock, calibration needs, and
-                upcoming maintenance deadlines.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-200">
-              <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
-                <BarChart2 size={24} className="text-purple-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">
-                Insightful Analytics
-              </h3>
-              <p className="text-gray-600">
-                Generate comprehensive reports on equipment usage, downtime, and
-                departmental allocation.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-200">
-              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4">
-                <Users size={24} className="text-red-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Role-Based Access</h3>
-              <p className="text-gray-600">
-                Customize permissions for different team members based on their
-                responsibilities and departments.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition duration-200">
-              <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
-                <Shield size={24} className="text-indigo-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Data Security</h3>
-              <p className="text-gray-600">
-                Enterprise-grade security ensures your sensitive laboratory data
-                remains protected at all times.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Call to Action */}
-        <div className="bg-gray-900 text-white">
-          <div className="container mx-auto px-6 py-16 md:flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-bold mb-4">
-                Ready to optimize your lab operations?
-              </h2>
-              <p className="text-gray-300 mb-6 md:mb-0">
-                Join hundreds of leading research institutions and educational
-                facilities.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-200">
-                Start Free Trial
-              </button>
-              <button className="px-6 py-3 bg-transparent border border-gray-600 text-white font-medium rounded-lg hover:border-white transition duration-200">
-                Contact Sales
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Testimonials */}
-        <div className="container mx-auto px-6 py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">
-              Trusted by Scientists Worldwide
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              See what researchers and lab managers are saying about our
-              inventory management system.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <div className="flex items-center mb-4">
-                <img
-                  src="/api/placeholder/64/64"
-                  alt="User"
-                  className="w-12 h-12 rounded-full"
-                />
-                <div className="ml-4">
-                  <h4 className="font-semibold">Dr. Sarah Johnson</h4>
-                  <p className="text-gray-500 text-sm">
-                    Research Director, Cell Biology Institute
-                  </p>
-                </div>
-              </div>
-              <p className="text-gray-600">
-                "This system has transformed how we manage our lab equipment.
-                The maintenance scheduling alone has saved us thousands in
-                repair costs."
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <div className="flex items-center mb-4">
-                <img
-                  src="/api/placeholder/64/64"
-                  alt="User"
-                  className="w-12 h-12 rounded-full"
-                />
-                <div className="ml-4">
-                  <h4 className="font-semibold">Prof. Michael Chen</h4>
-                  <p className="text-gray-500 text-sm">
-                    Department Chair, University of Science
-                  </p>
-                </div>
-              </div>
-              <p className="text-gray-600">
-                "The analytics feature provides invaluable insights into how our
-                equipment is being utilized across departments. Highly
-                recommended."
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <div className="flex items-center mb-4">
-                <img
-                  src="/api/placeholder/64/64"
-                  alt="User"
-                  className="w-12 h-12 rounded-full"
-                />
-                <div className="ml-4">
-                  <h4 className="font-semibold">Lisa Martinez</h4>
-                  <p className="text-gray-500 text-sm">
-                    Lab Manager, Pharmaceutical Research
-                  </p>
-                </div>
-              </div>
-              <p className="text-gray-600">
-                "Implementation was smooth and the support team has been
-                exceptional. Our inventory accuracy has improved dramatically."
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* How It Works Section */}
-        <div className="container mx-auto px-6 py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">How It Works</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Our platform is designed to be intuitive and easy to implement in
-              your laboratory environment.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <div className="text-blue-600 font-bold text-xl">1</div>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">
-                Setup Your Inventory
-              </h3>
-              <p className="text-gray-600">
-                Quickly import your existing inventory data or add equipment
-                items one by one with our intuitive interface.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <div className="text-blue-600 font-bold text-xl">2</div>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">
-                Configure Workflows
-              </h3>
-              <p className="text-gray-600">
-                Set up maintenance schedules, define user roles, and customize
-                notifications to match your laboratory's needs.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <div className="text-blue-600 font-bold text-xl">3</div>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Start Optimizing</h3>
-              <p className="text-gray-600">
-                Begin tracking equipment usage, generating insights, and
-                improving your laboratory's operational efficiency.
-              </p>
-            </div>
-          </div>
-
-          
-        </div>
-
-        {/* FAQ Section */}
-        <div className="bg-white py-16">
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Find answers to common questions about our laboratory inventory
-                management system.
-              </p>
-            </div>
-
-            <div className="max-w-3xl mx-auto divide-y divide-gray-200">
-              <div className="py-6">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  How long does implementation typically take?
-                </h3>
-                <p className="mt-2 text-gray-600">
-                  Most labs are up and running within 1-2 weeks. Our team
-                  provides comprehensive onboarding support to ensure a smooth
-                  transition.
-                </p>
-              </div>
-
-              <div className="py-6">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Can we import data from our existing systems?
-                </h3>
-                <p className="mt-2 text-gray-600">
-                  Yes! We support data migration from most common inventory
-                  systems and can also work with CSV files or spreadsheets.
-                </p>
-              </div>
-
-              <div className="py-6">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Is the system compliant with industry regulations?
-                </h3>
-                <p className="mt-2 text-gray-600">
-                  Our platform is designed to help you maintain compliance with
-                  ISO, GLP, FDA, and other regulatory standards with
-                  comprehensive audit trails and validation documentation.
-                </p>
-              </div>
-
-              <div className="py-6">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Do you offer custom integrations with other lab software?
-                </h3>
-                <p className="mt-2 text-gray-600">
-                  Yes, our Professional and Enterprise plans include API access
-                  and custom integration options with LIMS, ELN, and other
-                  laboratory software systems.
-                </p>
-              </div>
-
-              <div className="py-6">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  What kind of support do you provide?
-                </h3>
-                <p className="mt-2 text-gray-600">
-                  All plans include dedicated support. Standard plans receive
-                  email support during business hours, while Professional and
-                  Enterprise plans include priority support and dedicated
-                  account managers.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Contact Section */}
         <div className="container mx-auto px-6 py-16">
@@ -1126,7 +795,7 @@ const LandingPage = () => {
                   <Phone className="text-blue-600 mr-4" size={20} />
                   <div>
                     <h4 className="font-semibold">Phone</h4>
-                    <p className="text-gray-600">+1 (800) 123-4567</p>
+                    <p className="text-gray-600">+91 1234567890</p>
                   </div>
                 </div>
 
@@ -1134,7 +803,7 @@ const LandingPage = () => {
                   <Mail className="text-blue-600 mr-4" size={20} />
                   <div>
                     <h4 className="font-semibold">Email</h4>
-                    <p className="text-gray-600">info@labinventorysystem.com</p>
+                    <p className="text-gray-600">infoQuantumRack@amu.ac.in</p>
                   </div>
                 </div>
 
@@ -1143,9 +812,9 @@ const LandingPage = () => {
                   <div>
                     <h4 className="font-semibold">Address</h4>
                     <p className="text-gray-600">
-                      123 Science Boulevard, Research Park
+                      Computer Engineering Department , ZHCET
                       <br />
-                      San Francisco, CA 94107
+                      AMU
                     </p>
                   </div>
                 </div>
@@ -1227,7 +896,7 @@ const LandingPage = () => {
           <div className="container mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
               <div>
-                <h3 className="text-xl font-semibold mb-4">LabInventory</h3>
+                <h3 className="text-xl font-semibold mb-4">QuantumRack</h3>
                 <p className="text-gray-400">
                   The comprehensive solution for efficient laboratory equipment
                   management.
@@ -1331,7 +1000,7 @@ const LandingPage = () => {
 
             <div className="pt-8 mt-8 border-t border-gray-800 text-center md:flex md:items-center md:justify-between">
               <div className="text-gray-400 mb-4 md:mb-0">
-                &copy; {new Date().getFullYear()} LabInventory. All rights
+                &copy; {new Date().getFullYear()} QuantumRack. All rights
                 reserved.
               </div>
               <div className="flex justify-center space-x-6">

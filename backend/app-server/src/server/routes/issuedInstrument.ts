@@ -7,13 +7,12 @@ export function issuedInstrument(
   router: Router,
   mongodbConnector: MongodbConnector
 ) {
-  
   router.post("/issue/instrument/:id", authUSer, async (req, res) => {
     const id = req.params.id;
     const userId = req.userInfo.id;
 
     const { dateOfReturn, costPaid } = req.body;
-    console.log(dateOfReturn)
+    //console.log(dateOfReturn);
 
     try {
       const existingInstrument = await mongodbConnector.getDocument(
@@ -64,8 +63,8 @@ export function issuedInstrument(
 
         existingInstrument.available--;
 
-        if(existingInstrument.available == 0){
-          existingInstrument.status = "In Use"
+        if (existingInstrument.available == 0) {
+          existingInstrument.status = "In Use";
         }
 
         const data = await mongodbConnector.saveDocument(
@@ -77,9 +76,7 @@ export function issuedInstrument(
         return res.status(200).send({
           message: "Purchase Successfull",
         });
-
       } else {
-
         const alreadyRequest = await mongodbConnector.getDocument(
           "RequestInstrument",
           {
@@ -88,7 +85,7 @@ export function issuedInstrument(
           }
         );
 
-        console.log("alreadyRequest : " , alreadyRequest);
+        //console.log("alreadyRequest : ", alreadyRequest);
 
         if (alreadyRequest) {
           return res.status(409).send({
@@ -99,7 +96,7 @@ export function issuedInstrument(
         const requestInstrumentInfo = {
           instrumentId: new ObjectId(id),
           studentId: new ObjectId(userId),
-          dateOfRequest: new Date(Date.now()),
+          dateOfRequest: Date.now(),
           dateOfReturn: dateOfReturn,
         };
 
@@ -117,9 +114,7 @@ export function issuedInstrument(
         return res.status(200).send({
           message: "Request Successfull",
         });
-        
       }
-      
     } catch (error) {
       return res.status(500).send({
         message: "Internal Server Error",
@@ -137,7 +132,6 @@ export function issuedInstrument(
         { _id: new ObjectId(id), studentId: new ObjectId(userId) }
       );
 
-      console.log("ISSUED INSTRUMENT : ", instrumentDetails);
       if (!instrumentDetails) {
         return res.status(404).send({
           message: "Instrument Not Found",
@@ -161,13 +155,41 @@ export function issuedInstrument(
 
       instrumentInfo.available = instrumentInfo.available + 1;
 
-      console.log("INSTRUMENT INFO ", instrumentInfo);
+      // console.log("INSTRUMENT INFO ", instrumentInfo);
 
       const saveInstrument = await mongodbConnector.saveDocument(
         "Instrument",
         { _id: new ObjectId(instrumentInfo._id) },
         instrumentInfo
       );
+
+      const requestInstrument = await mongodbConnector.getAllbasedOnsort(
+        "RequestInstrument",
+        { instrumentId: new ObjectId(instrumentDetails.instrumentId) },
+        { dateOfRequest: 1 }
+      );
+
+      if (requestInstrument) {
+        const { _id, studentId, instrumentId, dateOfRequest, dateOfReturn } =
+          requestInstrument[0];
+
+        const issuedRequestInstrument = await mongodbConnector.createDcoument(
+          "IssuedInstrument",
+          { instrumentId, studentId, dateOfIssue: dateOfRequest, dateOfReturn }
+        );
+
+        if (issuedRequestInstrument) {
+          const deletedRequestInstrument =
+            await mongodbConnector.deleteDocument("RequestInstrument", {
+              studentId,
+              instrumentId,
+            });
+        }
+
+        // console.log("issuedRequestInstrument : ", issuedRequestInstrument);
+      }
+
+      // console.log("Sorted instrumentDetails : ", requestInstrument);
 
       return res.status(200).send({
         message: "Instrument submission successfull",
@@ -183,7 +205,6 @@ export function issuedInstrument(
     const { id } = req.params;
 
     try {
-
       const alreadyIssued = await mongodbConnector.getDocument(
         "IssuedInstrument",
         {
@@ -201,23 +222,20 @@ export function issuedInstrument(
         message: "Instrument fetched successfull",
         instrument: alreadyIssued,
       });
-
     } catch (error) {
       return res.status(501).send({
         message: "Internal Server Error",
       });
     }
-    
   });
 
   router.get("/get/all/issued/instrument", async (req, res) => {
-
     try {
       const issuedInstrument = await mongodbConnector.getAllInstrument(
         "IssuedInstrument",
         {}
       );
-      console.log(issuedInstrument);
+      // console.log(issuedInstrument);
       // console.log("HELLO");
       // console.log(issuedInstrument.populate("studentId"));
 
@@ -231,7 +249,6 @@ export function issuedInstrument(
         message: "Instrument fetched",
         issuedInstrument,
       });
-
     } catch (error) {
       return res.status(500).send({
         message: error.message,
@@ -239,24 +256,27 @@ export function issuedInstrument(
     }
   });
 
-  router.get("/get/all/issued/instrument/fromLab" , authUSer , async(req , res) =>{
+  router.get(
+    "/get/all/issued/instrument/fromLab",
+    authUSer,
+    async (req, res) => {
+      try {
+        const userId = req.userInfo.id;
 
-    try {
-      const userId = req.userInfo.id;
-  
-      const instruments = await mongodbConnector.getAllInstrument("IssuedInstrument" , {studentId : new ObjectId(userId)}); 
+        const instruments = await mongodbConnector.getAllInstrument(
+          "IssuedInstrument",
+          { studentId: new ObjectId(userId) }
+        );
 
-      res.status(200).send({
-        message:"Instrument fetched",
-        issuedInstrument:instruments,
-      })
-
-    } catch (error) {
-      res.status(500).send({
-        message:error.message
-      })
+        res.status(200).send({
+          message: "Instrument fetched",
+          issuedInstrument: instruments,
+        });
+      } catch (error) {
+        res.status(500).send({
+          message: error.message,
+        });
+      }
     }
-
-  })
-
+  );
 }

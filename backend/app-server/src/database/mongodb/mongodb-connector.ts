@@ -89,4 +89,13 @@ export class MongodbConnector{
         return instruments;
     }
 
+    async getAllbasedOnsort(collectionName : string ,filterObject:Filter<Document> , options:Filter<Document> = {}):Promise<any>{
+        const instrument = await this.getDb()
+        .collection(collectionName)
+        .find(filterObject)
+        .sort(options) // 1 for ascending, -1 for descending
+        .toArray();
+
+        return instrument;
+    }
 }

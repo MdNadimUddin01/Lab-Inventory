@@ -84,9 +84,9 @@ const LoginForm = () => {
             <div className="w-16 h-16 rounded-full bg-white absolute top-20 right-10 opacity-10"></div>
             <div className="w-12 h-12 rounded-full bg-white absolute bottom-4 left-1/4 opacity-10"></div>
           </div>
-          <h2 className="text-center text-3xl font-extrabold text-white">
+          {/* <h2 className="text-center text-3xl font-extrabold text-white">
             Lab Equipment Management
-          </h2>
+          </h2> */}
           <p className="mt-2 text-center text-blue-100 font-light">
             Sign in to your account
           </p>

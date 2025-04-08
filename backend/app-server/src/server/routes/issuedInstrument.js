@@ -18,7 +18,7 @@ function issuedInstrument(router, mongodbConnector) {
         const id = req.params.id;
         const userId = req.userInfo.id;
         const { dateOfReturn, costPaid } = req.body;
-        console.log(dateOfReturn);
+        //console.log(dateOfReturn);
         try {
             const existingInstrument = yield mongodbConnector.getDocument("Instrument", { _id: new mongodb_1.ObjectId(id) });
             if (!existingInstrument) {
@@ -64,7 +64,7 @@ function issuedInstrument(router, mongodbConnector) {
                     instrumentId: new mongodb_1.ObjectId(id),
                     studentId: new mongodb_1.ObjectId(userId),
                 });
-                console.log("alreadyRequest : ", alreadyRequest);
+                //console.log("alreadyRequest : ", alreadyRequest);
                 if (alreadyRequest) {
                     return res.status(409).send({
                         message: "You have already Request this instrument",
@@ -73,7 +73,7 @@ function issuedInstrument(router, mongodbConnector) {
                 const requestInstrumentInfo = {
                     instrumentId: new mongodb_1.ObjectId(id),
                     studentId: new mongodb_1.ObjectId(userId),
-                    dateOfRequest: new Date(Date.now()),
+                    dateOfRequest: Date.now(),
                     dateOfReturn: dateOfReturn,
                 };
                 const requestInstrument = yield mongodbConnector.createDcoument("RequestInstrument", requestInstrumentInfo);
@@ -98,7 +98,6 @@ function issuedInstrument(router, mongodbConnector) {
         const { id } = req.params;
         try {
             const instrumentDetails = yield mongodbConnector.getDocument("IssuedInstrument", { _id: new mongodb_1.ObjectId(id), studentId: new mongodb_1.ObjectId(userId) });
-            console.log("ISSUED INSTRUMENT : ", instrumentDetails);
             if (!instrumentDetails) {
                 return res.status(404).send({
                     message: "Instrument Not Found",
@@ -114,8 +113,21 @@ function issuedInstrument(router, mongodbConnector) {
                 _id: new mongodb_1.ObjectId(instrumentDetails.instrumentId),
             });
             instrumentInfo.available = instrumentInfo.available + 1;
-            console.log("INSTRUMENT INFO ", instrumentInfo);
+            // console.log("INSTRUMENT INFO ", instrumentInfo);
             const saveInstrument = yield mongodbConnector.saveDocument("Instrument", { _id: new mongodb_1.ObjectId(instrumentInfo._id) }, instrumentInfo);
+            const requestInstrument = yield mongodbConnector.getAllbasedOnsort("RequestInstrument", { instrumentId: new mongodb_1.ObjectId(instrumentDetails.instrumentId) }, { dateOfRequest: 1 });
+            if (requestInstrument) {
+                const { _id, studentId, instrumentId, dateOfRequest, dateOfReturn } = requestInstrument[0];
+                const issuedRequestInstrument = yield mongodbConnector.createDcoument("IssuedInstrument", { instrumentId, studentId, dateOfIssue: dateOfRequest, dateOfReturn });
+                if (issuedRequestInstrument) {
+                    const deletedRequestInstrument = yield mongodbConnector.deleteDocument("RequestInstrument", {
+                        studentId,
+                        instrumentId,
+                    });
+                }
+                // console.log("issuedRequestInstrument : ", issuedRequestInstrument);
+            }
+            // console.log("Sorted instrumentDetails : ", requestInstrument);
             return res.status(200).send({
                 message: "Instrument submission successfull",
             });
@@ -151,7 +163,7 @@ function issuedInstrument(router, mongodbConnector) {
     router.get("/get/all/issued/instrument", (req, res) => __awaiter(this, void 0, void 0, function* () {
         try {
             const issuedInstrument = yield mongodbConnector.getAllInstrument("IssuedInstrument", {});
-            console.log(issuedInstrument);
+            // console.log(issuedInstrument);
             // console.log("HELLO");
             // console.log(issuedInstrument.populate("studentId"));
             if (!issuedInstrument) {
@@ -181,7 +193,7 @@ function issuedInstrument(router, mongodbConnector) {
         }
         catch (error) {
             res.status(500).send({
-                message: error.message
+                message: error.message,
             });
         }
     }));

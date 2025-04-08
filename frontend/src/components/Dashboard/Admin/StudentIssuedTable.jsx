@@ -8,7 +8,7 @@ import {
   ChevronDown,
   Download,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const StudentIssuedTable = () => {
   const [showBackButton, setShowBackButton] = useState(true);
@@ -55,6 +55,8 @@ const StudentIssuedTable = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white rounded-lg shadow-lg border border-gray-100">
       {/* Header section with gradient */}
@@ -86,7 +88,7 @@ const StudentIssuedTable = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <button
             className="flex items-center text-gray-600 hover:text-blue-600 transition-colors bg-white px-3 py-2 rounded-md shadow-sm border border-gray-200"
-            onClick={() => console.log("Back button clicked")}
+            onClick={() => navigate(-1)}
           >
             <ArrowLeft size={16} className="mr-2" />
             Back to Inventory
@@ -220,6 +222,7 @@ const StudentIssuedTable = () => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };

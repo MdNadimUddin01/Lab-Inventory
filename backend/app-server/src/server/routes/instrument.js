@@ -19,7 +19,8 @@ function instrument(router, mongodbConnector) {
         try {
             const { instrument } = req.body;
             instrument.userId = id;
-            const addInstrumentStatus = yield mongodbConnector.createDcoument("Instrument", Object.assign(Object.assign({}, instrument), { userId: id }));
+            console.log("instrument : ", instrument);
+            const addInstrumentStatus = yield mongodbConnector.createDcoument("Instrument", instrument);
             if (!addInstrumentStatus) {
                 return res.status(400).json({
                     message: `${instrument.instrumentName} failed to add in lab`,
@@ -45,6 +46,7 @@ function instrument(router, mongodbConnector) {
             const instrument = yield mongodbConnector.getDocument("Instrument", {
                 _id: new mongodb_1.ObjectId(id),
             });
+            console.log("INSTRUKMENT : ", instrument);
             if (!instrument) {
                 return res.status(404).send({
                     message: "Instrument not found",
@@ -81,24 +83,28 @@ function instrument(router, mongodbConnector) {
         }
     }));
     router.put("/update/instrument/:id", auth_1.authUSer, (0, checkPermission_1.checkPermission)("canEditInstrument", mongodbConnector), (req, res) => __awaiter(this, void 0, void 0, function* () {
-        const instrument = req.body;
+        const instrument = req.body.instrument;
         const id = req.params.id;
         instrument.userId = req.userInfo.id;
         try {
             const existingInstrument = yield mongodbConnector.getDocument("Instrument", { _id: new mongodb_1.ObjectId(id) });
+            console.log("Instrument existing : ", existingInstrument);
             if (!existingInstrument) {
                 return res.status(404).send({
                     message: "Instrument not found",
                 });
             }
-            yield mongodbConnector.saveDocument("Instrument", { _id: new mongodb_1.ObjectId(id) }, instrument);
+            delete instrument._id;
+            const data = yield mongodbConnector.saveDocument("Instrument", { _id: new mongodb_1.ObjectId(id) }, instrument);
             const updatedInstrument = yield mongodbConnector.getDocument("Instrument", { _id: new mongodb_1.ObjectId(id) });
+            console.log("updated Instrument : ", updatedInstrument);
             return res.status(200).send({
                 message: "Instrument updated",
                 updatedInstrument,
             });
         }
         catch (error) {
+            console.log("ERROR : ", error.message);
             return res.status(500).send({
                 message: error.message,
             });

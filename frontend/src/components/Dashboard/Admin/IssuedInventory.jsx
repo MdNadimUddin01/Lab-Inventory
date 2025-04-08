@@ -235,10 +235,10 @@ const ProductsList = ({ inventory }) => {
 
               <td className="px-6 py-4 text-center whitespace-nowrap">
                 <div className="text-sm text-gray-900">
-                  Last: {item.lastMaintenance}
+                  Last: {(new Date(item.lastMaintenance)).toDateString()}
                 </div>
                 <div className="text-sm text-gray-500">
-                  Next: {item.nextMaintenance}
+                  Next: {new Date(item.nextMaintenance).toDateString()}
                 </div>
               </td>
 

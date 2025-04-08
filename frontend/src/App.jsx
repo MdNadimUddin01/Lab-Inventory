@@ -6,7 +6,6 @@ import Product from "./components/Dashboard/Admin/Product";
 import LandingPage from "./components/Home/LandingPage";
 import LoginForm from "./components/Common/LoginForm";
 import SignupForm from "./components/Common/SignupForm";
-import LabInventoryManagement from "./pages/Dashboard/Temp";
 import RequestedInventory from "./components/Dashboard/Admin/RequestedInventory";
 import IssuedInventory from "./components/Dashboard/Admin/IssuedInventory";
 import StudentOutlet from "./components/Dashboard/Admin/StudentOutlet";
@@ -45,10 +44,6 @@ const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignupForm />,
-      },
-      {
-        path: "test",
-        element: <LabInventoryManagement />,
       },
       {
         path: "admin-dashboard",

@@ -36,6 +36,7 @@ const AddInventoryItem = () => {
 
   async function getInstrumentData() {
     const { data } = await axios.get(backendUrl + "get/instrument/" + id);
+    console.log("data : " , data)
     setFormData(data.instrument);
   }
 
@@ -102,10 +103,11 @@ const AddInventoryItem = () => {
 
           console.log("Editing inventory item:", formData);
           
-  
+
+          const instrument = formData
           const { data } = await axios.put(
             backendUrl + "update/instrument/" + id,
-            { instrument: formData ,token:token}
+            { instrument ,token:token}
           );
           console.log(data);
           navigate("/admin-dashboard/inventory");
@@ -121,8 +123,11 @@ const AddInventoryItem = () => {
 
           console.log("Adding new inventory item:", formData);
 
+          // console.log("instrument : " , )
+          const instrument = formData
+          console.log("instrument Date : " , instrument)
           const { data } = await axios.post(backendUrl + "create/instrument", {
-            instrument: formData,
+            instrument,
             token:token
           });
 

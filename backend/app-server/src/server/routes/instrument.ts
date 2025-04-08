@@ -13,12 +13,15 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
       const { id } = req.userInfo;
 
       try {
+        
         const { instrument } = req.body;
         instrument.userId = id;
 
+        console.log("instrument : " , instrument)
+
         const addInstrumentStatus = await mongodbConnector.createDcoument(
           "Instrument",
-          { ...instrument, userId: id }
+          instrument
         );
 
         if (!addInstrumentStatus) {
@@ -31,6 +34,7 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
           message: `${instrument.instrumentName} added in Lab`,
           addInstrumentStatus,
         });
+
       } catch (error) {
         return res.status(500).send({
           message: error.message,
@@ -51,6 +55,7 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
         _id: new ObjectId(id),
       });
 
+      console.log("INSTRUKMENT : " , instrument)
       if (!instrument) {
         return res.status(404).send({
           message: "Instrument not found",
@@ -95,15 +100,18 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
     authUSer,
     checkPermission("canEditInstrument", mongodbConnector),
     async (req, res) => {
-      const instrument = req.body;
+      const instrument = req.body.instrument;
       const id = req.params.id;
       instrument.userId = req.userInfo.id;
 
       try {
+        
         const existingInstrument = await mongodbConnector.getDocument(
           "Instrument",
           { _id: new ObjectId(id) }
         );
+
+        console.log("Instrument existing : ", existingInstrument)
 
         if (!existingInstrument) {
           return res.status(404).send({
@@ -111,22 +119,30 @@ export function instrument(router: Router, mongodbConnector: MongodbConnector) {
           });
         }
 
-        await mongodbConnector.saveDocument(
+        delete instrument._id;
+
+        const data= await mongodbConnector.saveDocument(
           "Instrument",
           { _id: new ObjectId(id) },
           instrument
         );
+
+
 
         const updatedInstrument = await mongodbConnector.getDocument(
           "Instrument",
           { _id: new ObjectId(id) }
         );
 
+        console.log("updated Instrument : " , updatedInstrument)
+
         return res.status(200).send({
           message: "Instrument updated",
           updatedInstrument,
         });
+
       } catch (error) {
+        console.log("ERROR : " ,error.message)
         return res.status(500).send({
           message: error.message,
         });

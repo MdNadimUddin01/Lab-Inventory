@@ -35,11 +35,11 @@ const MobileNav = () => {
   ];
 
   return (
-    <div className="md:hidden">
+    <div className="block md:hidden">
       <button
-        className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800
-            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform hover:-translate-y-0.5`}
+        className="flex justify-center py-2 px-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle menu"
       >
         {isOpen ? (
           <svg
@@ -47,7 +47,7 @@ const MobileNav = () => {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            className="w-6 h-6"
+            className="w-5 h-5"
           >
             <path
               strokeLinecap="round"
@@ -62,7 +62,7 @@ const MobileNav = () => {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            className="w-6 h-6"
+            className="w-5 h-5"
           >
             <path
               strokeLinecap="round"
@@ -75,14 +75,14 @@ const MobileNav = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-16 left-0 right-0 bg-white shadow-md p-4 z-50">
+        <div className="absolute left-0 right-0 top-16 z-50 bg-white p-4 shadow-md">
           <nav>
             <ul className="space-y-2">
               {data.map((item, index) => (
                 <li key={index}>
                   <Link
                     to={item.to}
-                    className="block px-3 py-2 rounded-md hover:bg-gray-100 transition duration-200"
+                    className="block rounded-md px-3 py-2 transition duration-200 hover:bg-gray-100"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.title}
@@ -91,9 +91,11 @@ const MobileNav = () => {
               ))}
               <li>
                 <button
-                  onClick={() => navigate("/signup")}
-                  className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform hover:-translate-y-0.5`}
+                  onClick={() => {
+                    navigate("/signup");
+                    setIsOpen(false);
+                  }}
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform hover:-translate-y-0.5"
                 >
                   Get Started
                 </button>
@@ -145,10 +147,7 @@ const LabFlaskIcon = ({
 
 const Header = () => {
   const user = JSON.parse(localStorage.getItem("user")) ?? null;
-  console.log(user);
-
   const navigate = useNavigate();
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const data = [
@@ -156,33 +155,39 @@ const Header = () => {
       title: "Inventory",
       to: "/inventory",
     },
-    {
-      title: "Reports",
-      to: "/reports",
-    },
-    {
-      title: "Support",
-      to: "/support",
-    },
   ];
 
+  const handleClickOutside = (e) => {
+    if (isDropdownOpen && !e.target.closest(".user-dropdown")) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  // Add event listener for clicking outside dropdown
+  useState(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
   return (
-    <header className="bg-white w-screen shadow-sm sticky top-0 z-10">
-      <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-10">
-          <Link to="/">
-            <div className="text-xl font-bold text-blue-600 mr-8 flex items-center justify-between gap-2">
-              <GiAstrolabe className="w-10 h-10" />
-              <span>LabInventory</span>
+    <header className="sticky top-0 z-10 w-full bg-white shadow-sm">
+      <div className="container mx-auto flex items-center justify-between px-4 py-3 sm:px-6">
+        <div className="flex items-center">
+          <Link to="/" className="flex items-center">
+            <div className="mr-2 flex items-center justify-between gap-1 text-lg font-bold text-blue-600 sm:gap-2 sm:text-xl">
+              <GiAstrolabe className="h-8 w-8" />
+              <span className="hidden sm:inline">QuantumRack</span>
             </div>
           </Link>
-          <nav className="hidden md:block">
-            <ul className="flex space-x-8">
+          <nav className="hidden md:ml-8 md:block">
+            <ul className="flex space-x-6">
               {data.map((item, index) => (
                 <li key={index}>
                   <Link
                     to={item.to}
-                    className="text-gray-600 hover:text-blue-600 transition duration-200"
+                    className="text-gray-600 transition duration-200 hover:text-blue-600"
                   >
                     {item.title}
                   </Link>
@@ -191,72 +196,73 @@ const Header = () => {
             </ul>
           </nav>
         </div>
-        {user == null && (
-          <div className="hidden md:flex items-center space-x-4">
-            <Link
-              to="/signin"
-              className="text-gray-600 hover:text-blue-600 transition duration-200"
-            >
-              Login
-            </Link>
-            <button
-              onClick={() => {
-                navigate("/signup");
-              }}
-              className={`flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform hover:-translate-y-0.5 cursor-pointer`}
-            >
-              Get Started
-            </button>
-          </div>
-        )}
-        {user && (
-          <div className="relative">
-            <button
-              className="flex cursor-pointer items-center space-x-2 px-2 py-1 rounded hover:bg-gray-100"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              <div className="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <FaUser className="h-5 w-5 text-white" />
-              </div>
-              <span className="hidden md:inline font-medium text-gray-700">
-                {user.name}
-              </span>
-              <FaChevronDown className="h-4 w-4 text-gray-500" />
-            </button>
+        
+        <div className="flex items-center space-x-2">
+          {/* If user is not logged in - show on desktop */}
+          {!user && (
+            <div className="hidden md:flex items-center space-x-4">
+              <Link
+                to="/signin"
+                className="text-gray-600 transition duration-200 hover:text-blue-600"
+              >
+                Login
+              </Link>
+              <button
+                onClick={() => navigate("/signup")}
+                className="rounded-lg border border-transparent bg-gradient-to-r from-blue-600 to-indigo-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-300 hover:from-blue-700 hover:to-indigo-800 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Get Started
+              </button>
+            </div>
+          )}
 
-            {/* Dropdown menu */}
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-                <Link
-                  onClick={() => setIsDropdownOpen(false)}
-                  to={
-                    user.role === "Admin"
-                      ? "admin-dashboard"
-                      : "student-dashboard"
-                  }
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  <FaUser className="h-4 w-4 mr-2" />
-                  Profile
-                </Link>
-                <hr className="my-1 border-gray-200" />
-                <button
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    localStorage.removeItem("user");
-                    navigate("/");
-                  }}
-                  className="flex w-full cursor-pointer items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                >
-                  <FaSignOutAlt className="h-4 w-4 mr-2" />
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-        <MobileNav />
+          {/* User profile dropdown - for both mobile and desktop */}
+          {user && (
+            <div className="relative user-dropdown">
+              <button
+                className="flex items-center space-x-1 rounded px-2 py-1 hover:bg-gray-100 sm:space-x-2"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500">
+                  <FaUser className="h-4 w-4 text-white" />
+                </div>
+                <span className="hidden font-medium text-gray-700 sm:inline">
+                  {user.name}
+                </span>
+                <FaChevronDown className="h-3 w-3 text-gray-500" />
+              </button>
+
+              {/* Dropdown menu */}
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-md border border-gray-200 bg-white py-2 shadow-lg z-10">
+                  <Link
+                    onClick={() => setIsDropdownOpen(false)}
+                    to={user.role === "Admin" ? "admin-dashboard" : "student-dashboard"}
+                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    <FaUser className="mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
+                  <hr className="my-1 border-gray-200" />
+                  <button
+                    onClick={() => {
+                      setIsDropdownOpen(false);
+                      localStorage.removeItem("user");
+                      navigate("/");
+                    }}
+                    className="flex w-full cursor-pointer items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                  >
+                    <FaSignOutAlt className="mr-2 h-4 w-4" />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Mobile navigation */}
+         {!user && <MobileNav />}
+        </div>
       </div>
     </header>
   );

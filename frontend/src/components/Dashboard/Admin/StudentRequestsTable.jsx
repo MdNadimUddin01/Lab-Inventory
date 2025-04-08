@@ -8,27 +8,35 @@ import {
   ChevronDown,
   Download,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const StudentRequestsTable = () => {
   const [showBackButton, setShowBackButton] = useState(true);
   const { id } = useParams();
   const [search, setSearch] = useState("");
 
-  const issuedInstrument =
+  let issuedInstrument =
     JSON.parse(localStorage.getItem("requestedInventory"))[id] ?? [];
 
-  console.log(issuedInstrument);
+  console.log("issuedInstrument : ",  issuedInstrument.students);
+
   const [activeEquipment, setActiveEquipment] = useState(
     issuedInstrument.instrumentDetails ?? {}
   );
 
+  const issuedInstrumentData = Object.values(issuedInstrument.students).sort((a, b) => {
+    const dateA = a.requestDate;
+    const dateB = b.requestDate
+    return dateA - dateB;
+  });
+
+  console.log("issuedInstrument : " , issuedInstrument);
+
   // Sample student requests data
-  const studentRequests =
-    issuedInstrument.students.filter((item) => {
+  const studentRequests = issuedInstrumentData.filter((item) => {
       return item.name.toLowerCase().includes(search.toLowerCase());
     }) ?? [];
-  console.log(search);
+
   // Function to format dates
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -54,6 +62,8 @@ const StudentRequestsTable = () => {
         return "bg-gray-100 text-gray-800 border border-gray-200";
     }
   };
+
+  const navigate = useNavigate()
 
   return (
     <div className="bg-white rounded-lg shadow-lg border border-gray-100">
@@ -86,7 +96,7 @@ const StudentRequestsTable = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <button
             className="flex items-center text-gray-600 hover:text-blue-600 transition-colors bg-white px-3 py-2 rounded-md shadow-sm border border-gray-200"
-            onClick={() => console.log("Back button clicked")}
+            onClick={() => navigate(-1)}
           >
             <ArrowLeft size={16} className="mr-2" />
             Back to Inventory
@@ -98,7 +108,7 @@ const StudentRequestsTable = () => {
                 type="text"
                 onChange={(e) => {
                   e.preventDefault();
-                  console.log(e.target.value)
+                  console.log(e.target.value);
                   setSearch(e.target.value);
                 }}
                 value={search}

@@ -12,7 +12,7 @@ const SignupForm = () => {
     name: "",
     email: "",
     password: "",
-    role: "user",
+    role: "student",
     phoneNumber: "",
   });
 
@@ -73,6 +73,8 @@ const SignupForm = () => {
 
     // Simulate API call
     try{
+
+      // console.log("formData : " , formData)
       const {data} = await axios.post(backendUrl + "signup" , formData);
 
       toast.success(data.message);
@@ -97,9 +99,9 @@ const SignupForm = () => {
             <div className="w-16 h-16 rounded-full bg-white absolute top-20 right-10 opacity-10"></div>
             <div className="w-12 h-12 rounded-full bg-white absolute bottom-4 left-1/4 opacity-10"></div>
           </div>
-          <h2 className="text-center text-3xl font-extrabold text-white">
+          {/* <h2 className="text-center text-3xl font-extrabold text-white">
             Lab Equipment Management
-          </h2>
+          </h2> */}
           <p className="mt-2 text-center text-blue-100 font-light">
             Create your account to get started
           </p>
@@ -258,8 +260,8 @@ const SignupForm = () => {
                   onChange={handleChange}
                   className="appearance-none text-gray-700 block w-full pl-10 px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all duration-200"
                 >
-                  <option value="user">User</option>
-                  <option value="admin">Administrator</option>
+                  <option value="Student">User</option>
+                  <option value="Admin">Administrator</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <svg

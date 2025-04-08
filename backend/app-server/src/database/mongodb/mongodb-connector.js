@@ -98,5 +98,15 @@ class MongodbConnector {
             return instruments;
         });
     }
+    getAllbasedOnsort(collectionName_1, filterObject_1) {
+        return __awaiter(this, arguments, void 0, function* (collectionName, filterObject, options = {}) {
+            const instrument = yield this.getDb()
+                .collection(collectionName)
+                .find(filterObject)
+                .sort(options) // 1 for ascending, -1 for descending
+                .toArray();
+            return instrument;
+        });
+    }
 }
 exports.MongodbConnector = MongodbConnector;

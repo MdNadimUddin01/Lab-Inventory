@@ -49,11 +49,11 @@ function Admin() {
    <div>
       {user && <div className="min-h-screen rounded-3xl  flex">
       {/* <div className=" overflow-hidden shadow-xl flex"> */}
-        <div className='w-64 rounded-3xl '><Sidebar title="Admin Dashboard" SidebarData={SidebarData} /></div>
+        <div className='sm:w-64 rounded-3xl w-0'><Sidebar title="Admin Dashboard" SidebarData={SidebarData} /></div>
         
         
         {/* Main Content - Outlet will render child routes here */}
-        <div className="flex  item-center justify-center p-6 w-full">
+        <div className="flex overflow-scroll  item-center justify-center p-6 w-full">
           <Outlet />
         </div>
       {/* </div> */}

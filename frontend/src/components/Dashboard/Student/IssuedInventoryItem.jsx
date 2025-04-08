@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 function IssuedInventoryItem() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -33,7 +34,7 @@ function IssuedInventoryItem() {
         }
       );
 
-      console.log(data.issuedInstrument);
+      console.log("DATA : ", data.issuedInstrument);
       const instruments = data.issuedInstrument;
       const groupedData = {};
       // const instruments = data.issuedInstrument;
@@ -44,12 +45,37 @@ function IssuedInventoryItem() {
           ...entry.instrumentDetails,
           dateOfIssue: entry.dateOfIssue,
           dateOfReturn: entry.dateOfReturn,
+          issuedInstrumentId: entry._id,
         });
       }
 
+      console.log("issuedInventory : ", issuedInventory);
       // localStorage.setItem("issuedInventory", JSON.stringify(groupedData));
       setInventory(issuedInventory);
+
+      console.log();
     } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function submitInventory(issuedInstrumentId) {
+    const token = getCookie("token");
+    const toastId = toast.loading("Submitting Instrument");
+    try {
+
+      const { data } = await axios.delete(
+        backendUrl + "submit/instrument/" + issuedInstrumentId,
+        { data: { token: token } }
+      );
+
+      toast.remove(toastId);
+      toast.success("Submission Successfull")
+      getData();
+      // console.log("DATA : " , backendUrl + "submit/instrument/" + issuedInstrumentId)
+    } catch (error) {
+      toast.remove(toastId);
+      toast.error("Submission Failed , try again");
       console.log(error);
     }
   }
@@ -84,7 +110,10 @@ function IssuedInventoryItem() {
         setSelectedCategory={setSelectedCategory}
         setSelectedStatus={setSelectedStatus}
       />
-      <ProductsList inventory={filteredItems} />
+      <ProductsList
+        inventory={filteredItems}
+        submitInventory={submitInventory}
+      />
     </div>
   );
 }
@@ -192,7 +221,9 @@ const SearchFilters = ({
   );
 };
 
-const ProductsList = ({ inventory }) => {
+const ProductsList = ({ inventory, submitInventory }) => {
+  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   return (
     <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
       <table className="w-full">
@@ -221,7 +252,7 @@ const ProductsList = ({ inventory }) => {
         </thead>
         <tbody className="divide-y divide-gray-200">
           {inventory.map((item) => (
-            <tr key={item.id} className="hover:bg-gray-50">
+            <tr key={item._id} className="hover:bg-gray-50">
               <td className="px-6 py-4 text-center whitespace-nowrap">
                 <div className="flex items-center">
                   <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
@@ -243,23 +274,21 @@ const ProductsList = ({ inventory }) => {
               </td>
 
               <td className="px-6 py-4 text-center whitespace-nowrap">
-
                 <div className="text-sm text-gray-900">
                   {new Date(item.dateOfIssue).toISOString().substring(0, 10)}
                 </div>
-          
               </td>
 
               <td className="px-6 py-4 text-center whitespace-nowrap">
-                <div className="text-sm text-gray-900">
-                  {item.dateOfReturn}
-                </div>
+                <div className="text-sm text-gray-900">{item.dateOfReturn}</div>
               </td>
 
               <td className="px-6 py-4 text-center bg-white whitespace-nowrap text-sm font-medium ">
                 <div className="flex justify-end space-x-3  py-2 px-3 rounded-lg cursor-pointer">
                   <button
-                    to={"student/123"}
+                    onClick={() => {
+                      submitInventory(item.issuedInstrumentId);
+                    }}
                     className="flex gap-2 items-center justify-center p-1.5 rounded-md bg-green-50 hover:bg-green-100 border border-green-200 transition-colors duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 cursor-pointer focus:ring-red-300"
                   >
                     <span>Submit Inventory</span>
