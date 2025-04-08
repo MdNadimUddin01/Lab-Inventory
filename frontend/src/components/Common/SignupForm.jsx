@@ -74,20 +74,21 @@ const SignupForm = () => {
     // Simulate API call
     try{
 
-      // console.log("formData : " , formData)
+      console.log("formData : " , formData)
       const {data} = await axios.post(backendUrl + "signup" , formData);
-
+      console.log(data)
       toast.success(data.message);
 
     }catch(error){
       toast.error(error.response.data)
     }
 
-    setTimeout(() => {
-      console.log("Form submitted successfully:", formData);
-      setIsSubmitting(false);
+    // setTimeout(() => {
+    //   console.log("Form submitted successfully:", formData);
+    //   // 
       
-    }, 1500);
+    // }, 1500);
+    setIsSubmitting(false);
   };
 
   return (
